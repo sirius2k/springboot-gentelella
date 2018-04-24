@@ -1,5 +1,5 @@
 ## Synopsis
-This project is gentelella admin template project which uses spring boot 2.0 and handlebars.
+This project is gentelella admin template project which uses spring boot and mustache(handlebars) template.
 
 ## Installation
 You can run this demo with the following command. 
