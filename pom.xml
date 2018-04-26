@@ -68,25 +68,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Tomcat / JSP / JSTL -->
-        <!--dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope>
-        </dependency-->
-        <!--dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-        </dependency-->
-
-        <!-- Need this to compile JSP, tomcat-embed-jasper version is not working, no idea why -->
-        <!--dependency>
-            <groupId>org.eclipse.jdt.core.compiler</groupId>
-            <artifactId>ecj</artifactId>
-            <version>${eclipse.jdt.compiler.version}</version>
-            <scope>provided</scope>
-        </dependency-->
-
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>
