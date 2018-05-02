@@ -494,7 +494,7 @@ body .container.body .right_col {
 body {
     color: #73879C;
     background: #2A3F54;
-    font-family: "NanumGothic", "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
+    font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif, "NanumGothic";
     font-size: 13px;
     font-weight: 400;
     line-height: 1.471
