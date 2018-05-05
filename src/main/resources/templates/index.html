@@ -1,24 +1,14 @@
-<!DOCTYPE html>
-<html lang="ko">
-
-<head>
-  {{>layout/header}}
-</head>
-
-<body class="nav-md">
-  <div class="container body">
-    <div class="main_container">
-      {{>layout/side_menu}}
-
-      {{>layout/top_navigation}}
-
-      {{>content/index}}
-
-      {{>layout/footer}}
-    </div>
-  </div>
-
-  {{>layout/scripts}}
-</body>
-
-</html>
+{{#layout}}
+  {{#header}}
+    {{>layout/header}}
+  {{/header}}
+  {{#content}}
+    {{>layout/side_menu}}
+    {{>layout/top_navigation}}
+    {{>content/index}}
+    {{>layout/footer}}
+  {{/content}}
+  {{#script}}
+    {{>layout/scripts}}
+  {{/script}}
+{{/layout}}
