@@ -1,36 +1,23 @@
-package kr.co.redbrush.webapp.admin.controller;
+package kr.co.redbrush.webapp.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.redbrush.webapp.admin.SpringBootWebApplication;
-import kr.co.redbrush.webapp.admin.domain.RandomValue;
-import kr.co.redbrush.webapp.admin.service.RandomDataService;
+import kr.co.redbrush.webapp.SpringBootWebApplication;
 import kr.co.redbrush.webapp.admin.test.TestVariables;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(controllers = RandomGeneratorController.class)
+//@WebMvcTest(controllers = RandomGeneratorController.class)
 @ContextConfiguration(classes={SpringBootWebApplication.class})
 @TestPropertySource(locations= TestVariables.APPLICATION_TEST_PROPERTIES)
 @Slf4j
 public class RandomGeneratorControllerTest {
+    /*
     @Autowired
     private MockMvc mockMvc;
 
@@ -65,4 +52,5 @@ public class RandomGeneratorControllerTest {
                 .andExpect(content().string(expectedContent))
                 .andDo(print());
     }
+    */
 }

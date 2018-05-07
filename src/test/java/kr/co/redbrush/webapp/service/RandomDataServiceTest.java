@@ -1,8 +1,8 @@
-package kr.co.redbrush.webapp.admin.service;
+package kr.co.redbrush.webapp.service;
 
-import kr.co.redbrush.webapp.admin.domain.RandomData;
-import kr.co.redbrush.webapp.admin.domain.RandomValue;
-import kr.co.redbrush.webapp.admin.repository.RandomDataRepository;
+import kr.co.redbrush.webapp.domain.RandomData;
+import kr.co.redbrush.webapp.domain.RandomValue;
+import kr.co.redbrush.webapp.repository.RandomDataRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;

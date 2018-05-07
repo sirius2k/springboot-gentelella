@@ -1,6 +1,6 @@
-package kr.co.redbrush.webapp.admin.repository;
+package kr.co.redbrush.webapp.repository;
 
-import kr.co.redbrush.webapp.admin.domain.RandomData;
+import kr.co.redbrush.webapp.domain.RandomData;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Date;

@@ -1,9 +1,10 @@
-package kr.co.redbrush.webapp.admin.controller;
+package kr.co.redbrush.webapp.controller;
 
-import kr.co.redbrush.webapp.admin.SpringBootWebApplication;
+import kr.co.redbrush.webapp.SpringBootWebApplication;
+import kr.co.redbrush.webapp.controller.admin.IndexController;
 import kr.co.redbrush.webapp.admin.test.TestVariables;
-import kr.co.redbrush.webapp.admin.domain.RandomData;
-import kr.co.redbrush.webapp.admin.service.RandomDataService;
+import kr.co.redbrush.webapp.domain.RandomData;
+import kr.co.redbrush.webapp.service.RandomDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;

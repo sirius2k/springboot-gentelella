@@ -1,4 +1,4 @@
-package kr.co.redbrush.webapp.admin.controller;
+package kr.co.redbrush.webapp.controller.admin;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package kr.co.redbrush.webapp.admin.domain;
+package kr.co.redbrush.webapp.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

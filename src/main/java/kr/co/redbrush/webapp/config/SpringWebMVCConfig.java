@@ -1,4 +1,4 @@
-package kr.co.redbrush.webapp.admin.config;
+package kr.co.redbrush.webapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

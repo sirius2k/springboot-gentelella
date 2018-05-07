@@ -1,14 +1,13 @@
-package kr.co.redbrush.webapp.admin.service;
+package kr.co.redbrush.webapp.service;
 
-import kr.co.redbrush.webapp.admin.repository.RandomDataRepository;
-import kr.co.redbrush.webapp.admin.domain.RandomData;
-import kr.co.redbrush.webapp.admin.domain.RandomValue;
+import kr.co.redbrush.webapp.repository.RandomDataRepository;
+import kr.co.redbrush.webapp.domain.RandomData;
+import kr.co.redbrush.webapp.domain.RandomValue;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;

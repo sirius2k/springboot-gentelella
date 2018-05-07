@@ -1,4 +1,4 @@
-package kr.co.redbrush.webapp.admin;
+package kr.co.redbrush.webapp;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
