@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes ={ SpringBootWebApplication.class})
 @TestPropertySource(locations = TestVariables.APPLICATION_TEST_PROPERTIES)
 @Slf4j
+@Ignore("Need to implement controller base test")
 public class IndexControllerTest {
 
     @Autowired
