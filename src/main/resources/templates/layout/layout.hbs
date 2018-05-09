@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="{{i18n "html.lang"}}">
+<head>
+  {{#block "header"}}
+    {{>layout/header}}
+  {{/block}}
+</head>
+
+<body class="nav-md">
+  <div class="container body">
+    <div class="main_container">
+      {{#block "sideMenu"}}
+        {{>layout/side_menu}}
+      {{/block}}
+      {{#block "topNavigation"}}
+        {{>layout/top_navigation}}
+      {{/block}}
+      {{#block "content"}}
+        {{>layout/dummy_content}}
+      {{/block}}
+      {{#block "footer"}}
+        {{>layout/footer}}
+      {{/block}}
+    </div>
+  </div>
+  {{#block "scripts"}}
+    {{>layout/scripts}}
+  {{/block}}
+</body>
+</html>
