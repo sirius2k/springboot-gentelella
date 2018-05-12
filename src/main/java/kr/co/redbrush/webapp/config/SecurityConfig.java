@@ -42,14 +42,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/signin").permitAll()
                 .antMatchers("/**").authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
+                .loginPage("/signin")
+                .loginProcessingUrl("/signin")
                 .defaultSuccessUrl("/")
-                .failureUrl("/login")
+                .failureUrl("/signin")
                 .and()
                 .logout();
     }
