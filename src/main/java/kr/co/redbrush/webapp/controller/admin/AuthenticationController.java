@@ -12,8 +12,15 @@ import java.util.Map;
 public class AuthenticationController {
 
     @GetMapping("/signin")
-    public String login(Map<String, Object> model) {
+    public String signinForm(Map<String, Object> model) {
         LOGGER.debug("GET /signin called!");
+
+        return "signin";
+    }
+
+    @PostMapping("/signin")
+    public String processSignin(Map<String, Object> model) {
+        LOGGER.debug("Post /signin called!");
 
         return "signin";
     }
