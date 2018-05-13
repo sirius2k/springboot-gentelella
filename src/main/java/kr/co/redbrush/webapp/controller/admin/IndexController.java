@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class IndexController {
 
-    @GetMapping({"/", "/index"})
+    @GetMapping({"/", "/index", "/index/0"})
     public String index(Map<String, Object> model) {
         LOGGER.debug("Index called model : {}", model);
 

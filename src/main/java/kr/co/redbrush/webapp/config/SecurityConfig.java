@@ -3,6 +3,7 @@ package kr.co.redbrush.webapp.config;
 import kr.co.redbrush.webapp.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -16,6 +17,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -23,7 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(accountService)
+        authenticationManagerBuilder.authenticationProvider(authenticationProvider)
+                .userDetailsService(accountService)
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -42,14 +47,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
-                .antMatchers("/signin").permitAll()
+                .antMatchers("/login/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/error").permitAll()
                 .antMatchers("/**").authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/signin")
-                .loginProcessingUrl("/signin")
+                .loginPage("/login/form")
+                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
-                .failureUrl("/signin?error=true")
+                .failureUrl("/login?error=true")
                 .usernameParameter("id")
                 .passwordParameter("password")
                 .and()
