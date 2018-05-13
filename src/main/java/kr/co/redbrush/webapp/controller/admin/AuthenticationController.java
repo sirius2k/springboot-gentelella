@@ -11,17 +11,11 @@ import java.util.Map;
 @Slf4j
 public class AuthenticationController {
 
-    @GetMapping("/signin")
-    public String signinForm(Map<String, Object> model) {
-        LOGGER.debug("GET /signin called!");
+    @GetMapping("/login/form")
+    public String loginForm(Map<String, Object> model) {
+        LOGGER.debug("GET /login/form called!");
 
-        return "signin";
+        return "login";
     }
 
-    @PostMapping("/signin")
-    public String processSignin(Map<String, Object> model) {
-        LOGGER.debug("Post /signin called!");
-
-        return "signin";
-    }
 }
