@@ -4,7 +4,7 @@
     <div class="animate form login_form">
       <section class="login_content">
         <form action="/signin" method="post">
-          <input type="hidden" name="{{_csrf.parameterName}}" value="{{_cstf.token}}"/>
+          <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}"/>
           <h1>Login Form</h1>
           <div>
             <input id="id" name="id" type="text" class="form-control" placeholder="Username" required="" />
