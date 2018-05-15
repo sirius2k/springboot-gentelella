@@ -3,8 +3,8 @@
   <div class="login_wrapper">
     <div class="animate form login_form">
       <section class="login_content">
-        <form action="/signin" method="post">
-          <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}"/>
+        <form action="/login" method="post">
+          <input type="hidden" name="{{request._csrf.parameterName}}" value="{{request._csrf.token}}"/>
           <h1>Login Form</h1>
           <div>
             <input id="id" name="id" type="text" class="form-control" placeholder="Username" required="" />
