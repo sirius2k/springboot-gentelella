@@ -22,6 +22,8 @@ public class AccountService implements UserDetailsService {
 
         Account account = accountRepository.findAccountByUserId(username);
 
+        if (account == null) throw new UsernameNotFoundException("username = " + username);
+
         return new SecureAccount(account);
     }
 }
