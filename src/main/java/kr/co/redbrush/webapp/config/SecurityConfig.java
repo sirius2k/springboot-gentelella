@@ -46,11 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf()
+        // TODO : Use below code to disable csrf.
+        /*httpSecurity.csrf()
                 .disable()
-                .authorizeRequests()
-        // TODO : Use below code to enable csrf.
-        //httpSecurity.authorizeRequests()
+                .authorizeRequests()*/
+        httpSecurity.authorizeRequests()
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/error").permitAll()
