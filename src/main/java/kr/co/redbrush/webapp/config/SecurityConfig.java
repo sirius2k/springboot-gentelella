@@ -46,8 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
+        httpSecurity.csrf()
+                .disable()
                 .authorizeRequests()
+        // TODO : Use below code to enable csrf.
+        //httpSecurity.authorizeRequests()
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/error").permitAll()
@@ -57,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login/form")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
-                .failureUrl("/login?error=true")
+                .failureUrl("/login/form?error=true")
                 .usernameParameter("id")
                 .passwordParameter("password")
                 .and()
