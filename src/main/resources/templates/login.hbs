@@ -6,6 +6,9 @@
         <form action="/login" method="post">
           <input type="hidden" name="{{request._csrf.parameterName}}" value="{{request._csrf.token}}"/>
           <h1>Login Form</h1>
+          {{#if error}}
+          <p class="red">We don’t recognise the id and password combination you’ve entered. Please try again.</p>
+          {{/if}}
           <div>
             <input id="id" name="id" type="text" class="form-control" placeholder="Username" required="" />
           </div>
