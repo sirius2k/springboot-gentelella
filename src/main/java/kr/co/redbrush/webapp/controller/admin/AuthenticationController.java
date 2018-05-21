@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
@@ -13,12 +13,14 @@ import java.util.Map;
 public class AuthenticationController {
 
     @GetMapping("/login/form")
-    public String loginForm(Map<String, Object> model, String error) {
-        LOGGER.debug("GET /login/form called!");
-
-        model.put("error", BooleanUtils.toBoolean(error));
+    public String loginForm(HttpServletRequest request, Map<String, Object> model, String error) {
+        setErrorCondition(model, error);
 
         return "login";
+    }
+
+    private void setErrorCondition(Map<String, Object> model, String error) {
+        model.put("error", BooleanUtils.toBoolean(error));
     }
 
 }

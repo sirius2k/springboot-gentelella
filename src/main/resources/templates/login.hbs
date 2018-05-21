@@ -4,7 +4,7 @@
     <div class="animate form login_form">
       <section class="login_content">
         <form action="/login" method="post">
-          <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}"/>
+          <input type="hidden" name="{{session._csrf.parameterName}}" value="{{session._csrfToken.token}}"/>
           <h1>Login Form</h1>
           {{#if error}}
           <p class="red">We don’t recognise the id and password combination you’ve entered. Please try again.</p>
