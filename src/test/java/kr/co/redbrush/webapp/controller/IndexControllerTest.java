@@ -2,8 +2,8 @@ package kr.co.redbrush.webapp.controller;
 
 import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
 import kr.co.redbrush.webapp.SpringBootWebApplication;
-import kr.co.redbrush.webapp.controller.admin.IndexController;
 import kr.co.redbrush.webapp.admin.test.TestVariables;
+import kr.co.redbrush.webapp.controller.admin.IndexController;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 

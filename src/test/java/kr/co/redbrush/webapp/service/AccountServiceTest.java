@@ -1,40 +1,27 @@
 package kr.co.redbrush.webapp.service;
 
-import kr.co.redbrush.webapp.domain.*;
+import kr.co.redbrush.webapp.domain.Account;
+import kr.co.redbrush.webapp.domain.AccountRole;
+import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.repository.AccountRepository;
-import kr.co.redbrush.webapp.repository.RandomDataRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
-import static org.hamcrest.number.OrderingComparison.lessThanOrEqualTo;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
