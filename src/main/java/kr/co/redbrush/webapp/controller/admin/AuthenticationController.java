@@ -3,6 +3,8 @@ package kr.co.redbrush.webapp.controller.admin;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -18,7 +20,16 @@ public class AuthenticationController {
     public String loginForm(HttpServletRequest request, Map<String, Object> model, String error) {
         setErrorCondition(model, error);
 
-        CsrfToken token = (CsrfToken)request.getSession().getAttribute(CsrfToken.class.getName() + ".CSRF_TOKEN");
+        // TODO : WIP get csrf token
+        // sessionAttribute name : SPRING_SECURITY_SAVED_REQUEST
+
+        Enumeration<String> e = request.getSession().getAttributeNames();
+        while (e.hasMoreElements()) {
+            String attributeName = e.nextElement();
+            LOGGER.debug("sessionAttribute name : {}, value : {}", attributeName, request.getSession().getAttribute(attributeName));
+        }
+
+        CsrfToken token = (CsrfToken)request.getSession().getAttribute(HttpSessionCsrfTokenRepository.class.getName() + ".CSRF_TOKEN");
 
         LOGGER.debug("csrfToken : {}", token);
 
