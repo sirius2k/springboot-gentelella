@@ -29,9 +29,13 @@ public class AuthenticationController {
             LOGGER.debug("sessionAttribute name : {}, value : {}", attributeName, request.getSession().getAttribute(attributeName));
         }
 
-        CsrfToken token = (CsrfToken)request.getSession().getAttribute(HttpSessionCsrfTokenRepository.class.getName() + ".CSRF_TOKEN");
+        CsrfToken token = (CsrfToken)request.getSession().getAttribute("org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository.CSRF_TOKEN");
+        request.setAttribute("csrfToken", token);
+        request.setAttribute("errorMessage", request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION"));
 
-        LOGGER.debug("csrfToken : {}", token);
+        if (token!=null) {
+            LOGGER.debug("csrfToken : {}, parameterName : {}, token : {}", token, token.getParameterName(), token.getToken());
+        }
 
         return "login";
     }
