@@ -7,7 +7,7 @@
           <input type="hidden" name="{{csrfToken.parameterName}}" value="{{csrfToken.token}}"/>
           <h1>Login Form</h1>
           {{#if errorMessage}}
-          <p class="red">errorMessage</p>
+          <p class="red">{{errorMessage}}</p>
           {{/if}}
           <div>
             <input id="id" name="id" type="text" class="form-control" placeholder="Username" required="" />
