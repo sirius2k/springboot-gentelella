@@ -12,8 +12,6 @@ public class IndexController {
 
     @GetMapping({"/", "/index", "/index/0"})
     public String index(Map<String, Object> model) {
-        LOGGER.debug("Index called model : {}", model);
-
         model.put("title", "Springboot Web Service");
 
         return "index";

@@ -2,46 +2,33 @@ package kr.co.redbrush.webapp.controller.admin;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
 import java.util.Map;
 
 @Controller
 @Slf4j
 public class AuthenticationController {
+    private static final String SPRING_SECURITY_LAST_EXCEPTION = "SPRING_SECURITY_LAST_EXCEPTION";
 
     @GetMapping("/login/form")
     public String loginForm(HttpServletRequest request, Map<String, Object> model, String error) {
-        setErrorCondition(model, error);
-
-        // TODO : WIP get csrf token
-        // sessionAttribute name : SPRING_SECURITY_SAVED_REQUEST
-
-        Enumeration<String> e = request.getSession().getAttributeNames();
-        while (e.hasMoreElements()) {
-            String attributeName = e.nextElement();
-            LOGGER.debug("sessionAttribute name : {}, value : {}", attributeName, request.getSession().getAttribute(attributeName));
-        }
-
-        CsrfToken token = (CsrfToken)request.getSession().getAttribute("org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository.CSRF_TOKEN");
-        model.put("csrfToken", token);
-        model.put("errorMessage", request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION"));
-
-        if (token!=null) {
-            LOGGER.debug("csrfToken : {}, parameterName : {}, token : {}", token, token.getParameterName(), token.getToken());
-        }
+        setErrorCondition(request, model, error);
 
         return "login";
     }
 
-    private void setErrorCondition(Map<String, Object> model, String error) {
+    private void setErrorCondition(HttpServletRequest request, Map<String, Object> model, String error) {
+        AuthenticationException authenticationException = (AuthenticationException)request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION);
+
         model.put("error", BooleanUtils.toBoolean(error));
+
+        if (authenticationException!=null) {
+            model.put("errorMessage", authenticationException.getMessage());
+        }
     }
 
 }
