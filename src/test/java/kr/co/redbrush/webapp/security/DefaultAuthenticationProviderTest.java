@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +46,20 @@ public class DefaultAuthenticationProviderTest {
     private String password = "password";
     private String invalidUsername = "invalid";
     private SecureAccount userDetails;
+    private List<AccountRole> accountRoles;
 
     @Before
     public void before() {
+        AccountRole accountRole = new AccountRole();
+        accountRole.setRoleName("ADMIN");
+
+        accountRoles = new ArrayList<AccountRole>();
+        accountRoles.add(accountRole);
+
         Account account = new Account();
         account.setUserId(username);
         account.setPassword(password);
+        account.setRoles(accountRoles);
 
         userDetails = new SecureAccount(account);
 
@@ -58,7 +67,7 @@ public class DefaultAuthenticationProviderTest {
         when(accountService.loadUserByUsername(invalidUsername)).thenReturn(null);
     }
 
-    @Test
+    @Test(expected = UsernameNotFoundException.class)
     public void testAuthenticate() throws Exception {
         Authentication authentication = defaultAuthenticationProvider.authenticate(token);
 

@@ -25,7 +25,7 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication;
         UserDetails userDetails = accountService.loadUserByUsername(token.getName());
 
-        if (userDetails != null) {
+        if (userDetails == null) {
             throw new UsernameNotFoundException(token.getName());
         }
 
