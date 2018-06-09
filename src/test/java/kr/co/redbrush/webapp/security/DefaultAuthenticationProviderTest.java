@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -68,7 +70,25 @@ public class DefaultAuthenticationProviderTest {
     }
 
     @Test(expected = UsernameNotFoundException.class)
+    public void testAuthenticateShouldReturnUsernameNotFoundException() throws Exception {
+        when(token.getName()).thenReturn(null);
+
+        defaultAuthenticationProvider.authenticate(token);
+    }
+
+    @Test(expected = BadCredentialsException.class)
+    public void testAuthenticateShouldReturnBadCredentialsException() throws Exception {
+        when(token.getName()).thenReturn(username);
+        when(token.getCredentials()).thenReturn(null);
+
+        defaultAuthenticationProvider.authenticate(token);
+    }
+
+    @Test
     public void testAuthenticate() throws Exception {
+        when(token.getName()).thenReturn(username);
+        when(token.getCredentials()).thenReturn(password);
+
         Authentication authentication = defaultAuthenticationProvider.authenticate(token);
 
         LOGGER.debug("authentication : {}", authentication);
@@ -76,5 +96,16 @@ public class DefaultAuthenticationProviderTest {
         assertThat("Unexpected value.", authentication, notNullValue());
         assertThat("Unexpected value.", authentication.getPrincipal(), is(username));
         assertThat("Unexpected value.", authentication.getCredentials(), is(password));
+    }
+
+    @Test
+    public void testSupports() throws Exception {
+        boolean positiveResult = defaultAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class);
+
+        assertThat("Unexpected value.", positiveResult, is(true));
+
+        boolean negativeResult = defaultAuthenticationProvider.supports(TestingAuthenticationToken.class);
+
+        assertThat("Unexpected value.", negativeResult, is(false));
     }
 }
