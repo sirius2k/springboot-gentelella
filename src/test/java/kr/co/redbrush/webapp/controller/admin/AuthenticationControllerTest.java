@@ -42,6 +42,7 @@ public class AuthenticationControllerTest {
 
     @Before
     public void before() {
+        session = new MockHttpSession();
     }
 
     @Test
@@ -69,7 +70,6 @@ public class AuthenticationControllerTest {
         String sessionKey = "SPRING_SECURITY_LAST_EXCEPTION";
         String exceptionMessage = "Bad Credential";
 
-        session = new MockHttpSession();
         session.setAttribute(sessionKey, new BadCredentialsException("Bad Credential"));
 
         this.mockMvc.perform((get("/login/form").accept(MediaType.ALL)).param("error", "true").session(session))
