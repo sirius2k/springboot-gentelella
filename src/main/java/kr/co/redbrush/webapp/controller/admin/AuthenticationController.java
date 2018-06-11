@@ -12,7 +12,7 @@ import java.util.Map;
 @Controller
 @Slf4j
 public class AuthenticationController {
-    private static final String SPRING_SECURITY_LAST_EXCEPTION = "SPRING_SECURITY_LAST_EXCEPTION";
+    public static final String SPRING_SECURITY_LAST_EXCEPTION = "SPRING_SECURITY_LAST_EXCEPTION";
 
     @GetMapping("/login/form")
     public String loginForm(HttpServletRequest request, Map<String, Object> model, String error) {
