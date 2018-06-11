@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -66,11 +67,11 @@ public class AuthenticationControllerTest {
 
     @Test
     @WithMockUser(username="admin",roles={"ADMIN"})
-    public void testLoginFormWithBadCredential() throws Exception {
+    public void testLoginFormShouldReturnUsernameNotFoundException() throws Exception {
         String sessionKey = "SPRING_SECURITY_LAST_EXCEPTION";
-        String exceptionMessage = "Bad Credential";
+        String exceptionMessage = "Username not found.";
 
-        session.setAttribute(sessionKey, new BadCredentialsException("Bad Credential"));
+        session.setAttribute(sessionKey, new UsernameNotFoundException(exceptionMessage));
 
         this.mockMvc.perform((get("/login/form").accept(MediaType.ALL)).param("error", "true").session(session))
                 .andDo(print())
@@ -82,10 +83,17 @@ public class AuthenticationControllerTest {
 
     @Test
     @WithMockUser(username="admin",roles={"ADMIN"})
-    public void testLogin() throws Exception {
-        this.mockMvc.perform((post("/login").accept(MediaType.ALL).param("id", "admin").param("password", "admin").with(csrf())))
+    public void testLoginFormShouldReturnBadCredential() throws Exception {
+        String sessionKey = "SPRING_SECURITY_LAST_EXCEPTION";
+        String exceptionMessage = "Bad Credential";
+
+        session.setAttribute(sessionKey, new BadCredentialsException(exceptionMessage));
+
+        this.mockMvc.perform((get("/login/form").accept(MediaType.ALL)).param("error", "true").session(session))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(request().sessionAttribute("SPRING_SECURITY_LAST_EXCEPTION", instanceOf(BadCredentialsException.class)));
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"))
+                .andExpect(model().attribute("errorMessage", exceptionMessage))
+                .andExpect(model().attribute("error", true));
     }
 }

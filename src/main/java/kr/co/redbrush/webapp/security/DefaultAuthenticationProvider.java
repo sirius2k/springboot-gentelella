@@ -20,12 +20,12 @@ public class DefaultAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        LOGGER.debug("Authentication : {}", authentication);
-
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication;
         UserDetails userDetails = accountService.loadUserByUsername(token.getName());
 
         if (userDetails == null) {
+            LOGGER.info("Invalid username : {}", token.getName());
+
             throw new UsernameNotFoundException(token.getName());
         }
 

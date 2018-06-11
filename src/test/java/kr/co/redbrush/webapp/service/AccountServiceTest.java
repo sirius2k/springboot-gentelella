@@ -79,4 +79,13 @@ public class AccountServiceTest {
         assertThat("Unexpected value.", userDetails.getAuthorities().size(), is(account.getRoles().size()));
         assertThat("Unexpected value.", userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")), is(true));
     }
+
+    @Test
+    public void testGetCount() {
+        when(accountRepository.count()).thenReturn(1L);
+
+        long count = accountService.getCount();
+
+        assertThat("Unexpected value.", count, is(1L));
+    }
 }

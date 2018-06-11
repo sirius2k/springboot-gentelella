@@ -26,4 +26,8 @@ public class AccountService implements UserDetailsService {
 
         return new SecureAccount(account);
     }
+
+    public long getCount() {
+        return accountRepository.count();
+    }
 }
