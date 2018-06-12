@@ -1,56 +1,34 @@
 package kr.co.redbrush.webapp.controller.admin;
 
-import kr.co.redbrush.webapp.SpringBootWebApplication;
-import kr.co.redbrush.webapp.controller.admin.IndexController;
-import kr.co.redbrush.webapp.test.TestVariables;
+import kr.co.redbrush.webapp.controller.ControllerTestBase;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(controllers = IndexController.class)
-@ContextConfiguration(classes ={ SpringBootWebApplication.class})
-@TestPropertySource(locations = TestVariables.APPLICATION_TEST_PROPERTIES)
 @Slf4j
-public class IndexControllerTest {
+public class IndexControllerTest extends ControllerTestBase {
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Autowired
-    private MockMvc mockMvc;
+    @InjectMocks
+    private IndexController indexController = new IndexController();
 
     @Before
     public void before() {
     }
 
     @Test
-    public void testIndexWithoutAuthentication() throws Exception {
-        this.mockMvc.perform(get("/").accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("http://localhost/login"));
-    }
-
-    @Test
-    @WithMockUser(username="admin",roles={"ADMIN"})
     public void testIndex() throws Exception {
-        String expectedContent = "Springboot Web Service";
+        String view = indexController.index(model);
 
-        this.mockMvc.perform(get("/").accept(MediaType.ALL))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(view().name("index"))
-            .andExpect(model().attribute("title", expectedContent));
+        assertThat("Unexpected value.", view, is("index"));
+        assertThat("Unexpected value.", model.get("title"), is("Springboot Web Service"));
     }
 }

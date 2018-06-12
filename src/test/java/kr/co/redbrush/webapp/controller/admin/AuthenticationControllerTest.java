@@ -1,99 +1,63 @@
 package kr.co.redbrush.webapp.controller.admin;
 
-import kr.co.redbrush.webapp.SpringBootWebApplication;
-import kr.co.redbrush.webapp.test.TestVariables;
+import kr.co.redbrush.webapp.controller.ControllerTestBase;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.springframework.security.core.AuthenticationException;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(controllers = AuthenticationController.class)
-@ContextConfiguration(classes ={ SpringBootWebApplication.class})
-@TestPropertySource(locations = TestVariables.APPLICATION_TEST_PROPERTIES)
 @Slf4j
-public class AuthenticationControllerTest {
+public class AuthenticationControllerTest extends ControllerTestBase {
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Autowired
-    private MockMvc mockMvc;
+    @InjectMocks
+    private AuthenticationController authenticationController = new AuthenticationController();
 
-    @Autowired
-    private WebApplicationContext context;
-
-    protected MockHttpSession session;
+    @Mock
+    private AuthenticationException authenticationException;
 
     @Before
     public void before() {
-        session = new MockHttpSession();
     }
 
     @Test
-    @WithMockUser(username="admin",roles={"ADMIN"})
-    public void testLoginForm() throws Exception {
-        this.mockMvc.perform(get("/login/form").accept(MediaType.ALL))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("login"));
+    public void testLoginFormWithoutError() throws Exception {
+        String error = null;
+        boolean expectedErrorParam = false;
+
+        when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
+
+        String view = authenticationController.loginForm(request, model, error);
+
+        assertThat("Unexpected value.", view, is("login"));
+        assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
+        assertThat("Unexpected value.", model.get("errorMessage"), nullValue());
     }
 
     @Test
-    @WithMockUser(username="admin",roles={"ADMIN"})
-    public void testLoginFormWithErrorParameter() throws Exception {
-        this.mockMvc.perform((get("/login/form").accept(MediaType.ALL)).param("error", "true"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("error", true));
-    }
+    public void testLoginFormWithError() throws Exception {
+        String error = "true";
+        String errorMessage = "Error";
+        boolean expectedErrorParam = true;
 
-    @Test
-    @WithMockUser(username="admin",roles={"ADMIN"})
-    public void testLoginFormShouldReturnUsernameNotFoundException() throws Exception {
-        String sessionKey = "SPRING_SECURITY_LAST_EXCEPTION";
-        String exceptionMessage = "Username not found.";
+        when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(authenticationException);
+        when(authenticationException.getMessage()).thenReturn(errorMessage);
 
-        session.setAttribute(sessionKey, new UsernameNotFoundException(exceptionMessage));
+        String view = authenticationController.loginForm(request, model, error);
 
-        this.mockMvc.perform((get("/login/form").accept(MediaType.ALL)).param("error", "true").session(session))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("errorMessage", exceptionMessage))
-                .andExpect(model().attribute("error", true));
-    }
-
-    @Test
-    @WithMockUser(username="admin",roles={"ADMIN"})
-    public void testLoginFormShouldReturnBadCredential() throws Exception {
-        String sessionKey = "SPRING_SECURITY_LAST_EXCEPTION";
-        String exceptionMessage = "Bad Credential";
-
-        session.setAttribute(sessionKey, new BadCredentialsException(exceptionMessage));
-
-        this.mockMvc.perform((get("/login/form").accept(MediaType.ALL)).param("error", "true").session(session))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("errorMessage", exceptionMessage))
-                .andExpect(model().attribute("error", true));
+        assertThat("Unexpected value.", view, is("login"));
+        assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
+        assertThat("Unexpected value.", model.get("errorMessage"), is(errorMessage));
     }
 }

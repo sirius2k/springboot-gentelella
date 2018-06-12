@@ -38,7 +38,11 @@ public class CustomErrorController implements ErrorController {
     private HttpStatus getHttpStatus(HttpServletRequest request) {
         Integer statusCode = (Integer)request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
-        return HttpStatus.resolve(statusCode);
+        if (statusCode != null) {
+            return HttpStatus.resolve(statusCode);
+        } else {
+            return null;
+        }
     }
 
     @Override
