@@ -1,6 +1,7 @@
 package kr.co.redbrush.webapp.controller.admin;
 
 import kr.co.redbrush.webapp.controller.ControllerTestBase;
+import kr.co.redbrush.webapp.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,6 +28,9 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     @Mock
     private AuthenticationException authenticationException;
 
+    @Mock
+    private AccountService accountService;
+
     @Before
     public void before() {
     }
@@ -37,10 +41,11 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         boolean expectedErrorParam = false;
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
+        when(accountService.getCount()).thenReturn(1L);
 
         String view = authenticationController.loginForm(request, model, error);
 
-        assertThat("Unexpected value.", view, is("login"));
+        assertThat("Unexpected value.", view, is(AuthenticationController.VIEW_LOGIN));
         assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
         assertThat("Unexpected value.", model.get("errorMessage"), nullValue());
     }
@@ -53,11 +58,27 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(authenticationException);
         when(authenticationException.getMessage()).thenReturn(errorMessage);
+        when(accountService.getCount()).thenReturn(1L);
 
         String view = authenticationController.loginForm(request, model, error);
 
-        assertThat("Unexpected value.", view, is("login"));
+        assertThat("Unexpected value.", view, is(AuthenticationController.VIEW_LOGIN));
         assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
         assertThat("Unexpected value.", model.get("errorMessage"), is(errorMessage));
+    }
+
+    @Test
+    public void testLoginFormWithNoReigsteredAccount() throws Exception {
+        String error = null;
+        boolean expectedErrorParam = false;
+
+        when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
+        when(accountService.getCount()).thenReturn(0L);
+
+        String view = authenticationController.loginForm(request, model, error);
+
+        assertThat("Unexpected value.", view, is(AuthenticationController.VIEW_SIGNUP));
+        assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
+        assertThat("Unexpected value.", model.get("errorMessage"), nullValue());
     }
 }
