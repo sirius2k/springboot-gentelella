@@ -16,15 +16,18 @@
         {{>layout/top_navigation}}
       {{/block}}
       {{#block "content"}}
-        {{>layout/dummy_content}}
+        <!-- Content -->
       {{/block}}
       {{#block "footer"}}
         {{>layout/footer}}
       {{/block}}
     </div>
   </div>
-  {{#block "scripts"}}
+  {{#block "commonScripts"}}
     {{>layout/scripts}}
+  {{/block}}
+  {{#block "scripts"}}
+      <!-- scripts for each page -->
   {{/block}}
 </body>
 </html>

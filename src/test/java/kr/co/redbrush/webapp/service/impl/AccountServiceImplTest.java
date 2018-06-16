@@ -1,4 +1,4 @@
-package kr.co.redbrush.webapp.service;
+package kr.co.redbrush.webapp.service.impl;
 
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
@@ -25,12 +25,12 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-public class AccountServiceTest {
+public class AccountServiceImplTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @InjectMocks
-    public AccountService accountService = new AccountService();
+    public AccountServiceImpl accountService = new AccountServiceImpl();
 
     @Mock
     private AccountRepository accountRepository;
@@ -78,6 +78,17 @@ public class AccountServiceTest {
         assertThat("Unexpected value.", userDetails.getAuthorities(), notNullValue());
         assertThat("Unexpected value.", userDetails.getAuthorities().size(), is(account.getRoles().size()));
         assertThat("Unexpected value.", userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")), is(true));
+    }
+
+    @Test
+    public void testInsertAdmin() {
+        Account createdAccount = new Account();
+
+        when(accountRepository.save(account)).thenReturn(createdAccount);
+
+        Account expectedAccount = accountService.insertAdmin(account);
+
+        assertThat("Unexpected value.", expectedAccount, is(createdAccount));
     }
 
     @Test

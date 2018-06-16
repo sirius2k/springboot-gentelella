@@ -1,6 +1,6 @@
 package kr.co.redbrush.webapp.security;
 
-import kr.co.redbrush.webapp.service.AccountService;
+import kr.co.redbrush.webapp.service.impl.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DefaultAuthenticationProvider implements AuthenticationProvider {
     @Autowired
-    private AccountService accountService;
+    private AccountServiceImpl accountServiceImpl;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication;
-        UserDetails userDetails = accountService.loadUserByUsername(token.getName());
+        UserDetails userDetails = accountServiceImpl.loadUserByUsername(token.getName());
 
         if (userDetails == null) {
             LOGGER.info("Invalid username : {}", token.getName());

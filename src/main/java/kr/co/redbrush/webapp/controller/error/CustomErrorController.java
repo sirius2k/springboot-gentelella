@@ -16,7 +16,7 @@ public class CustomErrorController implements ErrorController {
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, ModelMap model) {
         HttpStatus httpStatus = getHttpStatus(request);
-        String view = "page_error";
+        String view = "error";
 
         LOGGER.debug("handleError. httpStatus : {}", httpStatus);
 
@@ -25,7 +25,7 @@ public class CustomErrorController implements ErrorController {
                 case FORBIDDEN:
                 case NOT_FOUND:
                 case INTERNAL_SERVER_ERROR:
-                    view = "page_" + httpStatus.value();
+                    view = "error_" + httpStatus.value();
                     break;
             }
 

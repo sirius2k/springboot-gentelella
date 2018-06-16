@@ -1,7 +1,12 @@
 package kr.co.redbrush.webapp.controller.admin;
 
 import kr.co.redbrush.webapp.controller.ControllerTestBase;
-import kr.co.redbrush.webapp.service.AccountService;
+import kr.co.redbrush.webapp.domain.Account;
+import kr.co.redbrush.webapp.dto.RequestResult;
+import kr.co.redbrush.webapp.enums.MessageKey;
+import kr.co.redbrush.webapp.form.SignupForm;
+import kr.co.redbrush.webapp.service.MessageSourceService;
+import kr.co.redbrush.webapp.service.impl.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,13 +15,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -31,7 +41,16 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     private AuthenticationException authenticationException;
 
     @Mock
-    private AccountService accountService;
+    private AccountServiceImpl accountServiceImpl;
+
+    @Mock
+    private MessageSourceService messageSourceService;
+
+    @Mock
+    private BindingResult bindingResult;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @Before
     public void before() {
@@ -43,7 +62,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         boolean expectedErrorParam = false;
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
-        when(accountService.getCount()).thenReturn(1L);
+        when(accountServiceImpl.getCount()).thenReturn(1L);
 
         ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
@@ -60,7 +79,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(authenticationException);
         when(authenticationException.getMessage()).thenReturn(errorMessage);
-        when(accountService.getCount()).thenReturn(1L);
+        when(accountServiceImpl.getCount()).thenReturn(1L);
 
         ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
@@ -75,7 +94,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         boolean expectedErrorParam = false;
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
-        when(accountService.getCount()).thenReturn(0L);
+        when(accountServiceImpl.getCount()).thenReturn(0L);
 
         ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
@@ -87,18 +106,18 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
     @Test
     public void testSignupFormWithoutReigsteredAccount() throws Exception {
-        when(accountService.getCount()).thenReturn(0L);
+        when(accountServiceImpl.getCount()).thenReturn(0L);
 
-        ModelAndView modelAndView = authenticationController.signupForm(request, model);
+        ModelAndView modelAndView = authenticationController.signupForm();
 
         assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_SIGNUP));
     }
 
     @Test
     public void testSignupFormWithReigsteredAccount() throws Exception {
-        when(accountService.getCount()).thenReturn(1L);
+        when(accountServiceImpl.getCount()).thenReturn(1L);
 
-        ModelAndView modelAndView = authenticationController.signupForm(request, model);
+        ModelAndView modelAndView = authenticationController.signupForm();
 
         assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
         assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));
@@ -106,20 +125,48 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
     @Test
     public void testSignupWithoutReigsteredAccount() throws Exception {
-        when(accountService.getCount()).thenReturn(0L);
+        SignupForm signupForm = new SignupForm();
 
-        ModelAndView modelAndView = authenticationController.signup(request, model);
+        when(accountServiceImpl.getCount()).thenReturn(0L);
+        when(accountServiceImpl.insertAdmin(any(Account.class))).thenReturn(new Account());
 
-        assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));
+        RequestResult result = authenticationController.signup(signupForm, bindingResult);
+
+        assertThat("Unexpected value.", result.isSuccess(), is(true));
+    }
+
+    @Test
+    public void testSignupSaveError() throws Exception {
+        SignupForm signupForm = new SignupForm();
+
+        when(accountServiceImpl.getCount()).thenReturn(0L);
+        when(accountServiceImpl.insertAdmin(any(Account.class))).thenReturn(null);
+
+        RequestResult result = authenticationController.signup(signupForm, bindingResult);
+
+        assertThat("Unexpected value.", result.isSuccess(), is(false));
+        verify(messageSourceService).getMessage(MessageKey.ADMIN_CREATE_ERROR);
+    }
+
+    @Test(expected = BindException.class)
+    public void testSignupThrowsBindException() throws Exception {
+        SignupForm signupForm = new SignupForm();
+
+        when(accountServiceImpl.getCount()).thenReturn(0L);
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        authenticationController.signup(signupForm, bindingResult);
     }
 
     @Test
     public void testSignupWithReigsteredAccount() throws Exception {
-        when(accountService.getCount()).thenReturn(1L);
+        SignupForm signupForm = new SignupForm();
 
-        ModelAndView modelAndView = authenticationController.signup(request, model);
+        when(accountServiceImpl.getCount()).thenReturn(1L);
 
-        assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
-        assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));
+        RequestResult result = authenticationController.signup(signupForm, bindingResult);
+
+        assertThat("Unexpected value.", result.isSuccess(), is(false));
+        verify(messageSourceService).getMessage(MessageKey.ADMIN_ALREADY_CREATED);
     }
 }
