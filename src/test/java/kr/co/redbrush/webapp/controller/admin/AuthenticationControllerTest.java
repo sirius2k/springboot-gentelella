@@ -11,9 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.AbstractUrlBasedView;
+import org.springframework.web.servlet.view.RedirectView;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -43,9 +45,9 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
         when(accountService.getCount()).thenReturn(1L);
 
-        String view = authenticationController.loginForm(request, model, error);
+        ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
-        assertThat("Unexpected value.", view, is(AuthenticationController.VIEW_LOGIN));
+        assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_LOGIN));
         assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
         assertThat("Unexpected value.", model.get("errorMessage"), nullValue());
     }
@@ -60,25 +62,64 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         when(authenticationException.getMessage()).thenReturn(errorMessage);
         when(accountService.getCount()).thenReturn(1L);
 
-        String view = authenticationController.loginForm(request, model, error);
+        ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
-        assertThat("Unexpected value.", view, is(AuthenticationController.VIEW_LOGIN));
+        assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_LOGIN));
         assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
         assertThat("Unexpected value.", model.get("errorMessage"), is(errorMessage));
     }
 
     @Test
-    public void testLoginFormWithNoReigsteredAccount() throws Exception {
+    public void testLoginFormWithoutReigsteredAccount() throws Exception {
         String error = null;
         boolean expectedErrorParam = false;
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
         when(accountService.getCount()).thenReturn(0L);
 
-        String view = authenticationController.loginForm(request, model, error);
+        ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
-        assertThat("Unexpected value.", view, is(AuthenticationController.VIEW_SIGNUP));
+        assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
+        assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_SIGNUP_REDIRECT));
         assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
         assertThat("Unexpected value.", model.get("errorMessage"), nullValue());
+    }
+
+    @Test
+    public void testSignupFormWithoutReigsteredAccount() throws Exception {
+        when(accountService.getCount()).thenReturn(0L);
+
+        ModelAndView modelAndView = authenticationController.signupForm(request, model);
+
+        assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_SIGNUP));
+    }
+
+    @Test
+    public void testSignupFormWithReigsteredAccount() throws Exception {
+        when(accountService.getCount()).thenReturn(1L);
+
+        ModelAndView modelAndView = authenticationController.signupForm(request, model);
+
+        assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
+        assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));
+    }
+
+    @Test
+    public void testSignupWithoutReigsteredAccount() throws Exception {
+        when(accountService.getCount()).thenReturn(0L);
+
+        ModelAndView modelAndView = authenticationController.signup(request, model);
+
+        assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));
+    }
+
+    @Test
+    public void testSignupWithReigsteredAccount() throws Exception {
+        when(accountService.getCount()).thenReturn(1L);
+
+        ModelAndView modelAndView = authenticationController.signup(request, model);
+
+        assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
+        assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));
     }
 }
