@@ -2,26 +2,29 @@
     <div class="login_wrapper">
         <div class="animate form login_form">
             <section class="login_content">
-                <form action="" method="post">
+                <form id="signupForm" method="post">
+                    <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}"/>
+                    <input type="hidden" name="name" value=""/>
                     <h1>Create Account</h1>
                     <div>
-                        <input type="text" class="form-control" placeholder="Username" required="" />
+                        <input type="text" id="id" name="id" class="form-control" placeholder="Username" required="" />
                     </div>
                     <div>
-                        <input type="email" class="form-control" placeholder="Email" required="" />
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Email" required="" />
                     </div>
                     <div>
-                        <input type="password" class="form-control" placeholder="Password" required="" />
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="" />
                     </div>
                     <div>
-                        <a class="btn btn-default submit" href="index.html">Submit</a>
+                        <input type="button" class="btn btn-default submit" value="Submit" onclick="formSubmit();"/>
+                        <!--a class="btn btn-default submit" href="index.html">Submit</a-->
                     </div>
 
                     <div class="clearfix"></div>
 
                     <div class="separator">
                         <p class="change_link">Already a member ?
-                            <a href="#signin" class="to_register"> Log in </a>
+                            <a href="/login/form" class="to_register"> Log in </a>
                         </p>
 
                         <div class="clearfix"></div>
@@ -34,4 +37,34 @@
         </div>
     </div>
 {{/partial}}
+
+{{#partial "scripts"}}
+<script>
+    $(document).ready(function() {
+        $("#id").focus();
+    });
+
+    function formSubmit() {
+        $("#name").val($("#id").val());
+
+        var params = $("#signupForm").serialize();
+
+        $.ajax({
+            url: 'signup',
+            type: 'post',
+            data: params,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            dataType: 'html',
+            success: function(result) {
+                if (result.success) {
+                    alert("등록 성공!!");
+                } else {
+                    alert("등록 실패!!");
+                }
+            }
+        });
+    }
+</script>
+{{/partial}}
+
 {{>layout_login/layout}}

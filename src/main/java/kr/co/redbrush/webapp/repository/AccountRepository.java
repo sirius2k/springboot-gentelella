@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends PagingAndSortingRepository<Account, Long> {
     Account findAccountByUserId(String userId);
     Account findAccountByEmail(String email);
-    long count();
 }

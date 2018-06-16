@@ -38,10 +38,10 @@ public class CustomErrorControllerTest extends ControllerTestBase {
     }
 
     private void testHandleError(HttpStatus httpStatus) {
-        String expectedView = "page_error";
+        String expectedView = "error";
 
         if (httpStatus != null) {
-            expectedView = "page_" + httpStatus.value();
+            expectedView = "error_" + httpStatus.value();
             when(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)).thenReturn(httpStatus.value());
         }
 

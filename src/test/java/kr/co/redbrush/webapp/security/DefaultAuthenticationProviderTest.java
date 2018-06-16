@@ -3,7 +3,7 @@ package kr.co.redbrush.webapp.security;
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
 import kr.co.redbrush.webapp.domain.SecureAccount;
-import kr.co.redbrush.webapp.service.AccountService;
+import kr.co.redbrush.webapp.service.impl.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,7 +35,7 @@ public class DefaultAuthenticationProviderTest {
     public DefaultAuthenticationProvider defaultAuthenticationProvider = new DefaultAuthenticationProvider();
 
     @Mock
-    private AccountService accountService;
+    private AccountServiceImpl accountServiceImpl;
 
     @Mock
     private UsernamePasswordAuthenticationToken token;
@@ -61,8 +61,8 @@ public class DefaultAuthenticationProviderTest {
 
         userDetails = new SecureAccount(account);
 
-        when(accountService.loadUserByUsername(username)).thenReturn(userDetails);
-        when(accountService.loadUserByUsername(invalidUsername)).thenReturn(null);
+        when(accountServiceImpl.loadUserByUsername(username)).thenReturn(userDetails);
+        when(accountServiceImpl.loadUserByUsername(invalidUsername)).thenReturn(null);
     }
 
     @Test(expected = UsernameNotFoundException.class)

@@ -1,6 +1,6 @@
 package kr.co.redbrush.webapp.config;
 
-import kr.co.redbrush.webapp.service.AccountService;
+import kr.co.redbrush.webapp.service.impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    private AccountService accountService;
+    private AccountServiceImpl accountServiceImpl;
 
     @Autowired
     private AuthenticationProvider authenticationProvider;
@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.authenticationProvider(authenticationProvider)
-                .userDetailsService(accountService)
+                .userDetailsService(accountServiceImpl)
                 .passwordEncoder(passwordEncoder());
     }
 
