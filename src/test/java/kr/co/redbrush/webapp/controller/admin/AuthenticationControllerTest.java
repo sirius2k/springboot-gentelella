@@ -70,7 +70,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     }
 
     @Test
-    public void testLoginFormWithNoReigsteredAccount() throws Exception {
+    public void testLoginFormWithoutReigsteredAccount() throws Exception {
         String error = null;
         boolean expectedErrorParam = false;
 
@@ -86,7 +86,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     }
 
     @Test
-    public void testSignupFormWithNoReigsteredAccount() throws Exception {
+    public void testSignupFormWithoutReigsteredAccount() throws Exception {
         when(accountService.getCount()).thenReturn(0L);
 
         ModelAndView modelAndView = authenticationController.signupForm(request, model);
@@ -99,6 +99,25 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         when(accountService.getCount()).thenReturn(1L);
 
         ModelAndView modelAndView = authenticationController.signupForm(request, model);
+
+        assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
+        assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));
+    }
+
+    @Test
+    public void testSignupWithoutReigsteredAccount() throws Exception {
+        when(accountService.getCount()).thenReturn(0L);
+
+        ModelAndView modelAndView = authenticationController.signup(request, model);
+
+        assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));
+    }
+
+    @Test
+    public void testSignupWithReigsteredAccount() throws Exception {
+        when(accountService.getCount()).thenReturn(1L);
+
+        ModelAndView modelAndView = authenticationController.signup(request, model);
 
         assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
         assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_LOGIN_REDIRECT));

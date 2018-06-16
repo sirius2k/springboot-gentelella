@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -19,8 +20,8 @@ public class AuthenticationController {
     public static final String SPRING_SECURITY_LAST_EXCEPTION = "SPRING_SECURITY_LAST_EXCEPTION";
     public static final String VIEW_LOGIN = "login";
     public static final String VIEW_LOGIN_REDIRECT = "/login/form";
-    public static final String VIEW_SIGNUP = "signupForm";
-    public static final String VIEW_SIGNUP_REDIRECT = "/signupForm/form";
+    public static final String VIEW_SIGNUP = "signup";
+    public static final String VIEW_SIGNUP_REDIRECT = "/signup";
 
     @Autowired
     private AccountService accountService;
@@ -46,10 +47,20 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("/signup/form")
+    @GetMapping("/signup")
     public ModelAndView signupForm(HttpServletRequest request, Map<String, Object> model) {
         if (accountService.getCount() == 0) {
             return new ModelAndView(VIEW_SIGNUP);
+        } else {
+            return new ModelAndView(new RedirectView(VIEW_LOGIN_REDIRECT));
+        }
+    }
+
+    @PostMapping("/signup")
+    public ModelAndView signup(HttpServletRequest request, Map<String, Object> model) {
+        if (accountService.getCount() == 0) {
+            // TODO : Implement account insert
+            return null;
         } else {
             return new ModelAndView(new RedirectView(VIEW_LOGIN_REDIRECT));
         }
