@@ -24,6 +24,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -35,7 +36,7 @@ public class AuthenticationController {
     public static final String VIEW_SIGNUP_REDIRECT = "/signup";
 
     @Autowired
-    private AccountServiceImpl accountServiceImpl;
+    private AccountServiceImpl accountService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -47,7 +48,7 @@ public class AuthenticationController {
     public ModelAndView loginForm(HttpServletRequest request, Map<String, Object> model, String error) {
         setErrorCondition(request, model, error);
 
-        if (accountServiceImpl.getCount() == 0) {
+        if (accountService.getCount() == 0) {
             return new ModelAndView(new RedirectView(VIEW_SIGNUP_REDIRECT));
         } else {
             return new ModelAndView(VIEW_LOGIN, model);
@@ -55,18 +56,15 @@ public class AuthenticationController {
     }
 
     private void setErrorCondition(HttpServletRequest request, Map<String, Object> model, String error) {
-        AuthenticationException authenticationException = (AuthenticationException)request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION);
+        Optional.ofNullable((AuthenticationException)request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION))
+                .ifPresent(authenticatonException -> model.put("errorMessage", authenticatonException.getMessage()));
 
         model.put("error", BooleanUtils.toBoolean(error));
-
-        if (authenticationException!=null) {
-            model.put("errorMessage", authenticationException.getMessage());
-        }
     }
 
     @GetMapping("/signup")
     public ModelAndView signupForm() {
-        if (accountServiceImpl.getCount() == 0) {
+        if (accountService.getCount() == 0) {
             return new ModelAndView(VIEW_SIGNUP);
         } else {
             return new ModelAndView(new RedirectView(VIEW_LOGIN_REDIRECT));
@@ -75,15 +73,15 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public RequestResult signup(@Valid SignupForm signupForm, BindingResult bindingResult) throws BindException {
-        if (accountServiceImpl.getCount() == 0) {
+        if (accountService.getCount() == 0) {
             if (bindingResult.hasErrors()) {
                 throw new BindException(bindingResult);
             }
 
             Account account = modelMapper.map(signupForm, Account.class);
-            Account savedAccount = accountServiceImpl.insertAdmin(account);
+            Optional<Account> optionalAccount = Optional.ofNullable(accountService.insertAdmin(account));
 
-            if (savedAccount != null) {
+            if (optionalAccount.isPresent()) {
                 return new SuccessfulResult();
             } else {
                 return new FailedResult(messageSourceService.getMessage(MessageKey.ADMIN_CREATE_ERROR));
