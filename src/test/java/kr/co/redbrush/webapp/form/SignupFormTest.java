@@ -20,6 +20,7 @@ public class SignupFormTest extends FormValidationTestBase {
     private static Validator validator;
 
     private String validId = "testid";
+    private String validName = "testid";
     private String validEmail = "test@test.com";
     private String validPassword = "Password123!";
 
@@ -36,7 +37,7 @@ public class SignupFormTest extends FormValidationTestBase {
 
     @Test
     public void testValidation() {
-        testValidation(new SignupForm(validId, validEmail, validPassword), 0);
+        testValidation(new SignupForm(validId, validName, validEmail, validPassword), 0);
     }
 
     private Set<ConstraintViolation<SignupForm>> testValidation(SignupForm signupForm, int expectedViolationCount) {

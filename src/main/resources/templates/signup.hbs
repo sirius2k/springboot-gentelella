@@ -4,20 +4,20 @@
             <section class="login_content">
                 <form id="signupForm" method="post">
                     <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}"/>
-                    <input type="hidden" name="name" value=""/>
+                    <input type="hidden" id="name" name="name" value=""/>
                     <h1>Create Account</h1>
                     <div>
-                        <input type="text" id="id" name="id" class="form-control" placeholder="Username" required="" />
+                        <input type="text" id="id" name="id" class="form-control" placeholder="Username" required=""/>
                     </div>
                     <div>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Email" required="" />
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Email" required=""/>
                     </div>
                     <div>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="" />
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required=""/>
                     </div>
                     <div>
-                        <input type="button" class="btn btn-default submit" value="Submit" onclick="formSubmit();"/>
-                        <!--a class="btn btn-default submit" href="index.html">Submit</a-->
+                        <button type="submit" id="submitButton" class="btn btn-default submit">Submit</button>
+                        <!--a id="submitButton" class="btn btn-default submit" href="#">Submit</a-->
                     </div>
 
                     <div class="clearfix"></div>
@@ -44,7 +44,9 @@
         $("#id").focus();
     });
 
-    function formSubmit() {
+    $("#signupForm").submit(function(e) {
+        e.preventDefault();
+
         $("#name").val($("#id").val());
 
         var params = $("#signupForm").serialize();
@@ -54,16 +56,39 @@
             type: 'post',
             data: params,
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            dataType: 'html',
-            success: function(result) {
-                if (result.success) {
-                    alert("등록 성공!!");
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    location.href = "/";
                 } else {
-                    alert("등록 실패!!");
+                    $.each(response.errors, function(key, value) {
+                        $("input[name='" + key + "']").not(":hidden").tooltipster({
+                            theme: 'tooltipster-noir',
+                            side: 'right',
+                            trigger: 'custom',
+                            triggerClose: {
+                                mouseleave: false,
+                                originClick: true,
+                                touchleave: false
+                            },
+                            content: value
+                        }).tooltipster('open');
+                        //$("#errorMessages").append("<span class='error'>" + value + "</span>");
+                    });
                 }
+            },
+            error: function (e) {
+                console.log("error result : " + e.responseText);
+                var json = "<h4>Ajax Response</h4><pre>"
+                        + e.responseText + "</pre>";
+                $('#feedback').html(json);
+
+                console.log("ERROR : ", e);
+                $("#btn-search").prop("disabled", false);
             }
         });
-    }
+    });
+
 </script>
 {{/partial}}
 

@@ -5,15 +5,28 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-@Controller
+@ControllerAdvice
 @Slf4j
-public class CustomErrorController implements ErrorController {
+public class CustomErrorController {
+
+    @ExceptionHandler(BindException.class)
+    @ResponseBody
+    public BindingResult handleBindException(BindException exception) {
+        return exception.getBindingResult();
+    }
+
+    /*
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, ModelMap model) {
         StringBuilder view = new StringBuilder("error");
@@ -41,9 +54,5 @@ public class CustomErrorController implements ErrorController {
 
         return Optional.ofNullable(HttpStatus.resolve(statusCode));
     }
-
-    @Override
-    public String getErrorPath() {
-        return "/error";
-    }
+    */
 }

@@ -12,12 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -71,20 +73,21 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
     public RequestResult signup(@Valid SignupForm signupForm, BindingResult bindingResult) throws BindException {
         if (accountService.getCount() == 0) {
             if (bindingResult.hasErrors()) {
-                throw new BindException(bindingResult);
-            }
-
-            Account account = modelMapper.map(signupForm, Account.class);
-            Optional<Account> optionalAccount = Optional.ofNullable(accountService.insertAdmin(account));
-
-            if (optionalAccount.isPresent()) {
-                return new SuccessfulResult();
+                return new FailedResult(messageSourceService.getMessage(MessageKey.VALIDATION_FAILED), bindingResult);
             } else {
-                return new FailedResult(messageSourceService.getMessage(MessageKey.ADMIN_CREATE_ERROR));
+                Account account = modelMapper.map(signupForm, Account.class);
+                Optional<Account> optionalAccount = Optional.ofNullable(accountService.insertAdmin(account));
+
+                if (optionalAccount.isPresent()) {
+                    return new SuccessfulResult();
+                } else {
+                    return new FailedResult(messageSourceService.getMessage(MessageKey.ADMIN_CREATE_ERROR));
+                }
             }
         }
 
