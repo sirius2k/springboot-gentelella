@@ -13,14 +13,17 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class SignupForm {
     @NotEmpty(message = "{validation.id.NotEmpty}")
-    @Pattern(regexp = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,11}$", message = "{validation.id.Pattern}")
+    @Pattern(regexp = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,20}$", message = "{validation.id.Pattern}")
     private String id;
+
+    @NotEmpty(message = "{validation.name.NotEmpty}")
+    private String name;
 
     @NotEmpty(message = "{validation.email.NotEmpty}")
     @Email(message = "{validation.email.Email}")
     private String email;
 
     @NotEmpty(message = "{validation.password.NotEmpty}")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,20}$", message = "{validation.id.Pattern}")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,20}$", message = "{validation.password.Pattern}")
     private String password;
 }

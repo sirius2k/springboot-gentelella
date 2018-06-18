@@ -1,4 +1,4 @@
-package kr.co.redbrush.webapp.controller.interceptors;
+package kr.co.redbrush.webapp.controller.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
