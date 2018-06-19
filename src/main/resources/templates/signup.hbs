@@ -48,6 +48,7 @@
         e.preventDefault();
 
         $("#name").val($("#id").val());
+        $(".login_error").remove();
 
         var params = $("#signupForm").serialize();
 
@@ -62,6 +63,8 @@
                     location.href = "/";
                 } else {
                     $.each(response.errors, function(key, value) {
+                        /*
+                        // TODO : TIPSTER example
                         $("input[name='" + key + "']").not(":hidden").tooltipster({
                             theme: 'tooltipster-noir',
                             side: 'right',
@@ -73,7 +76,11 @@
                             },
                             content: value
                         }).tooltipster('open');
-                        //$("#errorMessages").append("<span class='error'>" + value + "</span>");
+                        */
+                        $("input[name='" + key + "']")
+                                .not(":hidden")
+                                .parent()
+                                .append("<div class='login_error'>" + value + "</div>");
                     });
                 }
             },
