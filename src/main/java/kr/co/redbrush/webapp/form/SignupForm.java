@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class SignupForm {
     @NotEmpty(message = "{validation.id.NotEmpty}")
-    @Pattern(regexp = "^[a-zA-Z]{1}[a-zA-Z0-9_]{4,20}$", message = "{validation.id.Pattern}")
+    @Pattern(regexp = "^[a-zA-Z]{1}[a-zA-Z0-9_]{3,20}$", message = "{validation.id.Pattern}")
     private String id;
 
     @NotEmpty(message = "{validation.name.NotEmpty}")

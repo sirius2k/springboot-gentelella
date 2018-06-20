@@ -19,8 +19,8 @@ public class SignupFormTest extends FormValidationTestBase {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
-    private String validId = "testid";
-    private String validName = "testid";
+    private String validId = "test";
+    private String validName = "test";
     private String validEmail = "test@test.com";
     private String validPassword = "Password123!";
 

@@ -3550,7 +3550,7 @@ form:after {
     border: 1px solid #c8c8c8;
     color: #777;
     margin: 0 0 20px;
-    width: 100%
+    width: 100%;
 }
 .login_content form input[type="text"]:focus,
 .login_content form input[type="email"]:focus,
@@ -3570,7 +3570,7 @@ form:after {
 }
 .login_content form div a {
     font-size: 12px;
-    margin: 10px 15px 0 0
+    margin: 10px 15px 0 0;
 }
 .reset_pass {
     margin-top: 10px !important
