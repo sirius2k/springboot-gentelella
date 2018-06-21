@@ -17,7 +17,6 @@
                     </div>
                     <div>
                         <button type="submit" id="submitButton" class="btn btn-default submit">Submit</button>
-                        <!--a id="submitButton" class="btn btn-default submit" href="#">Submit</a-->
                     </div>
 
                     <div class="clearfix"></div>
@@ -63,20 +62,6 @@
                     location.href = "/";
                 } else {
                     $.each(response.errors, function(key, value) {
-                        /*
-                        // TODO : TIPSTER example
-                        $("input[name='" + key + "']").not(":hidden").tooltipster({
-                            theme: 'tooltipster-noir',
-                            side: 'right',
-                            trigger: 'custom',
-                            triggerClose: {
-                                mouseleave: false,
-                                originClick: true,
-                                touchleave: false
-                            },
-                            content: value
-                        }).tooltipster('open');
-                        */
                         $("input[name='" + key + "']")
                                 .not(":hidden")
                                 .parent()
@@ -86,12 +71,11 @@
             },
             error: function (e) {
                 console.log("error result : " + e.responseText);
-                var json = "<h4>Ajax Response</h4><pre>"
-                        + e.responseText + "</pre>";
-                $('#feedback').html(json);
 
-                console.log("ERROR : ", e);
-                $("#btn-search").prop("disabled", false);
+                var response = JSON.parse(e.responseText);
+                var errorMessage = "<div class='login_error'>" + response.status + " " + response.error + "</div>";
+
+                $("#submitButton").parent().prepend(errorMessage);
             }
         });
     });
