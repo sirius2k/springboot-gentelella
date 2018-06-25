@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AccountRoleRepository extends PagingAndSortingRepository<AccountRole, Long> {
+    AccountRole findByRoleName(String roleName);
 }

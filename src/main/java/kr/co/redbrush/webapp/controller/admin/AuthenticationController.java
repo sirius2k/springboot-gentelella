@@ -73,7 +73,7 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping(value = "/signup", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(value = "/signup")
     @ResponseBody
     public RequestResult signup(@Valid SignupForm signupForm, BindingResult bindingResult) throws BindException {
         if (accountService.getCount() == 0) {
