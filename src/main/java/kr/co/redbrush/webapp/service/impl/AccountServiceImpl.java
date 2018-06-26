@@ -3,10 +3,14 @@ package kr.co.redbrush.webapp.service.impl;
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
 import kr.co.redbrush.webapp.domain.SecureAccount;
+import kr.co.redbrush.webapp.enums.MessageKey;
 import kr.co.redbrush.webapp.enums.Role;
+import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
+import kr.co.redbrush.webapp.exception.PasswordEmptyException;
 import kr.co.redbrush.webapp.repository.AccountRepository;
 import kr.co.redbrush.webapp.repository.AccountRoleRepository;
 import kr.co.redbrush.webapp.service.AccountService;
+import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.parboiled.common.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,9 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MessageSourceService messageSourceService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         LOGGER.debug("loadUserByUsername username : {}", username);
@@ -46,11 +53,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
     }
 
     public Account insertAdmin(Account account) {
-        AccountRole accountRole = accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName());
-        List<AccountRole> roles = new ArrayList<>();
-
-        roles.add(accountRole);
-        account.setRoles(roles);
+        addAdminRole(account);
 
         if (StringUtils.isNotEmpty(account.getPassword())) {
             String encryptedPassword = passwordEncoder.encode(account.getPassword());
@@ -58,9 +61,19 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
             account.setPassword(encryptedPassword);
 
             return accountRepository.save(account);
+        } else {
+            throw new PasswordEmptyException(messageSourceService.getMessage(MessageKey.PASSWORD_EMPTY));
         }
+    }
 
-        return null;
+    private void addAdminRole(Account account) {
+        List<AccountRole> roles = new ArrayList<>();
+        AccountRole accountRole = accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName());
+
+        if (accountRole == null) throw new AdminRoleNotFoundException(messageSourceService.getMessage(MessageKey.ADMIN_ROLE_NOT_FOUND));
+
+        roles.add(accountRole);
+        account.setRoles(roles);
     }
 
     public long getCount() {

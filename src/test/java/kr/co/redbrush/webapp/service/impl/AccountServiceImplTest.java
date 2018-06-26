@@ -11,6 +11,7 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
@@ -98,8 +99,18 @@ public class AccountServiceImplTest {
 
         when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
         when(passwordEncoder.encode(account.getPassword())).thenReturn(encryptedPassword);
-        // TODO : Implement argumentMatcher to check encoded password
-        //when(accountRepository.save(argThat()).thenReturn(createdAccount);
+        when(accountRepository.save(argThat(new ArgumentMatcher<Account>() {
+            @Override
+            public boolean matches(Object argument) {
+                Account account = (Account)argument;
+
+                if (account.getPassword().equals(encryptedPassword)) {
+                    return true;
+                }
+
+                return false;
+            }
+        }))).thenReturn(createdAccount);
 
         Account expectedAccount = accountService.insertAdmin(account);
 
