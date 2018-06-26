@@ -3,8 +3,11 @@ package kr.co.redbrush.webapp.service.impl;
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
 import kr.co.redbrush.webapp.domain.SecureAccount;
+import kr.co.redbrush.webapp.enums.Role;
 import kr.co.redbrush.webapp.repository.AccountRepository;
+import kr.co.redbrush.webapp.repository.AccountRoleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,6 +17,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -35,6 +40,12 @@ public class AccountServiceImplTest {
     @Mock
     private AccountRepository accountRepository;
 
+    @Mock
+    private AccountRoleRepository accountRoleRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     private Account account;
     private Long id = 1L;
     private String userId = "userId";
@@ -43,7 +54,7 @@ public class AccountServiceImplTest {
     private String email = "test@test.com";
 
     private AccountRole accountRole;
-    private String roleName = "ROLE_ADMIN";
+    private String roleName = Role.ROLE_ADMIN.getName();
 
     @Before
     public void before() {
@@ -83,8 +94,12 @@ public class AccountServiceImplTest {
     @Test
     public void testInsertAdmin() {
         Account createdAccount = new Account();
+        String encryptedPassword = "encryptedPassword";
 
-        when(accountRepository.save(account)).thenReturn(createdAccount);
+        when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
+        when(passwordEncoder.encode(account.getPassword())).thenReturn(encryptedPassword);
+        // TODO : Implement argumentMatcher to check encoded password
+        //when(accountRepository.save(argThat()).thenReturn(createdAccount);
 
         Account expectedAccount = accountService.insertAdmin(account);
 
