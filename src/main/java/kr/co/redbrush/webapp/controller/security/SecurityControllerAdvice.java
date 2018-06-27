@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice(basePackages = "kr.co.redbrush.webapp.controller")
 @Slf4j
 public class SecurityControllerAdvice {
-    private static final String CSRF_ATTRIBUTE_NAME = "_csrf";
+    public static final String CSRF_ATTRIBUTE_NAME = "_csrf";
 
     @ModelAttribute("_csrf")
-    public Object getHttpServletRequest(HttpServletRequest request) {
+    public Object getCsrf(HttpServletRequest request) {
         return request.getAttribute(CSRF_ATTRIBUTE_NAME);
     }
 }
