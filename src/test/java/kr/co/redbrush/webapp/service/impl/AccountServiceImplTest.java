@@ -4,8 +4,11 @@ import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.enums.Role;
+import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
+import kr.co.redbrush.webapp.exception.PasswordEmptyException;
 import kr.co.redbrush.webapp.repository.AccountRepository;
 import kr.co.redbrush.webapp.repository.AccountRoleRepository;
+import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -14,10 +17,13 @@ import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
@@ -45,7 +51,10 @@ public class AccountServiceImplTest {
     private AccountRoleRepository accountRoleRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private MessageSourceService messageSourceService;
+
+    @Spy
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private Account account;
     private Long id = 1L;
@@ -94,27 +103,39 @@ public class AccountServiceImplTest {
 
     @Test
     public void testInsertAdmin() {
-        Account createdAccount = new Account();
-        String encryptedPassword = "encryptedPassword";
-
         when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
-        when(passwordEncoder.encode(account.getPassword())).thenReturn(encryptedPassword);
         when(accountRepository.save(argThat(new ArgumentMatcher<Account>() {
             @Override
             public boolean matches(Object argument) {
                 Account account = (Account)argument;
 
-                if (account.getPassword().equals(encryptedPassword)) {
+                if (passwordEncoder.matches(password, account.getPassword())) {
                     return true;
                 }
 
                 return false;
             }
-        }))).thenReturn(createdAccount);
+        }))).thenReturn(account);
 
         Account expectedAccount = accountService.insertAdmin(account);
 
-        assertThat("Unexpected value.", expectedAccount, is(createdAccount));
+        assertThat("Unexpected value.", expectedAccount, is(account));
+    }
+
+    @Test(expected = PasswordEmptyException.class)
+    public void testInsertAdminWithEmptyPassword() {
+        account.setPassword(null);
+
+        when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
+
+        accountService.insertAdmin(account);
+    }
+
+    @Test(expected = AdminRoleNotFoundException.class)
+    public void testInsertAdminShouldReturnAdminRoleNotFoundException() {
+        when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(null);
+
+        accountService.insertAdmin(account);
     }
 
     @Test

@@ -68,11 +68,13 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
 
     private void addAdminRole(Account account) {
         List<AccountRole> roles = new ArrayList<>();
-        AccountRole accountRole = accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName());
+        AccountRole adminRole = accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName());
 
-        if (accountRole == null) throw new AdminRoleNotFoundException(messageSourceService.getMessage(MessageKey.ADMIN_ROLE_NOT_FOUND));
+        LOGGER.debug("Admin role : {}", adminRole);
 
-        roles.add(accountRole);
+        if (adminRole == null) throw new AdminRoleNotFoundException(messageSourceService.getMessage(MessageKey.ADMIN_ROLE_NOT_FOUND));
+
+        roles.add(adminRole);
         account.setRoles(roles);
     }
 
