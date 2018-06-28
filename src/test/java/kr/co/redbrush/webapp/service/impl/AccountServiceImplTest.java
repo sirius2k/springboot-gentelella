@@ -23,6 +23,7 @@ import org.mockito.junit.MockitoRule;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -99,6 +100,13 @@ public class AccountServiceImplTest {
         assertThat("Unexpected value.", userDetails.getAuthorities(), notNullValue());
         assertThat("Unexpected value.", userDetails.getAuthorities().size(), is(account.getRoles().size()));
         assertThat("Unexpected value.", userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")), is(true));
+    }
+
+    @Test(expected = UsernameNotFoundException.class)
+    public void testLoadUserByUsernameThrowsUserNameNotFoundException() {
+        when(accountRepository.findAccountByUserId(userId)).thenReturn(account);
+
+        accountService.loadUserByUsername(null);
     }
 
     @Test
