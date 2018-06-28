@@ -26,6 +26,7 @@ public class CustomErrorController {
         return exception.getBindingResult();
     }
 
+    // TODO : Implement or remove below code
     /*
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, ModelMap model) {
