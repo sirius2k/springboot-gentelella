@@ -35,7 +35,7 @@ public class AuthenticationController {
     public static final String VIEW_LOGIN = "login";
     public static final String VIEW_LOGIN_REDIRECT = "/login/form";
     public static final String VIEW_SIGNUP = "signup";
-    public static final String VIEW_SIGNUP_REDIRECT = "/signup";
+    public static final String VIEW_SIGNUP_REDIRECT = "/admin/signup";
 
     @Autowired
     private AccountServiceImpl accountService;
@@ -64,7 +64,7 @@ public class AuthenticationController {
         model.put("error", BooleanUtils.toBoolean(error));
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/admin/signup")
     public ModelAndView signupForm() {
         if (accountService.getCount() == 0) {
             return new ModelAndView(VIEW_SIGNUP);
@@ -73,7 +73,7 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping(value = "/signup")
+    @PostMapping(value = "/admin/signup")
     @ResponseBody
     public RequestResult signup(@Valid SignupForm signupForm, BindingResult bindingResult) throws BindException {
         if (accountService.getCount() == 0) {
