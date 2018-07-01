@@ -19,6 +19,9 @@ public class AccountRole {
     @Column(nullable = false, unique = true)
     private String roleName;
 
+    @Column(nullable = false)
+    private String description;
+
     @CreationTimestamp
     private Date createdDate;
 

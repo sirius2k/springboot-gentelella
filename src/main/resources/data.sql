@@ -1,0 +1,1 @@
+INSERT INTO account_role (role_name, description) VALUES ('ROLE_ADMIN', 'Administrator');
