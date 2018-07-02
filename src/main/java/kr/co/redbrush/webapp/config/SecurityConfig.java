@@ -11,6 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+
+import java.util.Arrays;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -55,17 +59,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/admin/signup").permitAll()
                 .antMatchers("/error").permitAll()
-                .antMatchers("/h2").permitAll()
+                .antMatchers("/h2/**").permitAll()
                 .antMatchers("/**").authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login/form")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/login/form?error=true")
-                .usernameParameter("id")
-                .passwordParameter("password")
+                    .formLogin()
+                        .loginPage("/login/form")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/")
+                        .failureUrl("/login/form?error=true")
+                        .usernameParameter("id")
+                        .passwordParameter("password")
                 .and()
-                .logout();
+                    .headers()
+                        .frameOptions()
+                            .disable()
+                .and()
+                    .csrf()
+                        .ignoringAntMatchers("/h2/**")
+                .and()
+                    .logout();
     }
 }
