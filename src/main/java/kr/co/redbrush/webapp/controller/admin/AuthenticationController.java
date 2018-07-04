@@ -80,11 +80,13 @@ public class AuthenticationController {
             if (bindingResult.hasErrors()) {
                 return new FailedResult(messageSourceService.getMessage(MessageKey.VALIDATION_FAILED), bindingResult);
             } else {
+                LOGGER.debug("Admin signup form : {}", signupForm);
+
                 Account account = modelMapper.map(signupForm, Account.class);
                 Optional<Account> optionalAccount = Optional.ofNullable(accountService.insertAdmin(account));
 
                 if (optionalAccount.isPresent()) {
-                    return new SuccessfulResult();
+                    return new SuccessfulResult(messageSourceService.getMessage(MessageKey.ADMIN_CREATED_SUCCESSFULLY));
                 } else {
                     return new FailedResult(messageSourceService.getMessage(MessageKey.ADMIN_CREATE_ERROR));
                 }

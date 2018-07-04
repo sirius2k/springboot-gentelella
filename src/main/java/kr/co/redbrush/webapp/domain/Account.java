@@ -30,9 +30,11 @@ public class Account {
     private String email;
 
     @CreationTimestamp
+    @Column
     private Date createdDate;
 
     @UpdateTimestamp
+    @Column
     private Date updatedDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -23,8 +23,10 @@ public class AccountRole {
     private String description;
 
     @CreationTimestamp
+    @Column
     private Date createdDate;
 
     @UpdateTimestamp
+    @Column
     private Date updatedDate;
 }
