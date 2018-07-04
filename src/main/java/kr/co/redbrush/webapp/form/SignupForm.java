@@ -12,9 +12,9 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignupForm {
-    @NotEmpty(message = "{validation.id.NotEmpty}")
-    @Pattern(regexp = "^[a-zA-Z]{1}[a-zA-Z0-9_]{3,20}$", message = "{validation.id.Pattern}")
-    private String id;
+    @NotEmpty(message = "{validation.userId.NotEmpty}")
+    @Pattern(regexp = "^[a-zA-Z]{1}[a-zA-Z0-9_]{3,20}$", message = "{validation.userId.Pattern}")
+    private String userId;
 
     @NotEmpty(message = "{validation.name.NotEmpty}")
     private String name;

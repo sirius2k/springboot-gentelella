@@ -148,16 +148,6 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         verify(messageSourceService).getMessage(MessageKey.ADMIN_CREATE_ERROR);
     }
 
-    @Test(expected = BindException.class)
-    public void testSignupThrowsBindException() throws Exception {
-        SignupForm signupForm = new SignupForm();
-
-        when(accountServiceImpl.getCount()).thenReturn(0L);
-        when(bindingResult.hasErrors()).thenReturn(true);
-
-        authenticationController.signup(signupForm, bindingResult);
-    }
-
     @Test
     public void testSignupWithReigsteredAccount() throws Exception {
         SignupForm signupForm = new SignupForm();

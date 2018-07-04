@@ -7,7 +7,7 @@
                     <input type="hidden" id="name" name="name" value=""/>
                     <h1>Create Account</h1>
                     <div>
-                        <input type="text" id="id" name="id" class="form-control" placeholder="Username" required=""/>
+                        <input type="text" id="userId" name="userId" class="form-control" placeholder="Username" required=""/>
                     </div>
                     <div>
                         <input type="email" id="email" name="email" class="form-control" placeholder="Email" required=""/>
@@ -40,13 +40,13 @@
 {{#partial "scripts"}}
 <script>
     $(document).ready(function() {
-        $("#id").focus();
+        $("#userId").focus();
     });
 
     $("#signupForm").submit(function(e) {
         e.preventDefault();
 
-        $("#name").val($("#id").val());
+        $("#name").val($("#userId").val());
         $(".login_error").remove();
 
         var params = $("#signupForm").serialize();
@@ -59,6 +59,7 @@
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
+                    alert();
                     location.href = "/";
                 } else {
                     $.each(response.errors, function(key, value) {

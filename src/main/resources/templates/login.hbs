@@ -10,7 +10,7 @@
           <p class="red">{{errorMessage}}</p>
           {{/if}}
           <div>
-            <input id="id" name="id" type="text" class="form-control" placeholder="Username" required="" />
+            <input id="userId" name="userId" type="text" class="form-control" placeholder="Username" required="" />
           </div>
           <div>
             <input id="password" name="password" type="password" class="form-control" placeholder="Password" required="" />
@@ -38,7 +38,7 @@
 {{#partial "script"}}
 <script>
     $(document).ready(function() {
-        $("#id").focus();
+        $("#userId").focus();
     });
 </script>
 {{/partial}}
