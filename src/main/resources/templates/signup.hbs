@@ -59,7 +59,7 @@
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    alert();
+                    alert(response.message);
                     location.href = "/";
                 } else {
                     $.each(response.errors, function(key, value) {
