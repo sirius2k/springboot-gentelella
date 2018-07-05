@@ -80,8 +80,6 @@ public class AuthenticationController {
             if (bindingResult.hasErrors()) {
                 return new FailedResult(messageSourceService.getMessage(MessageKey.VALIDATION_FAILED), bindingResult);
             } else {
-                LOGGER.debug("Admin signup form : {}", signupForm);
-
                 Account account = modelMapper.map(signupForm, Account.class);
                 Optional<Account> optionalAccount = Optional.ofNullable(accountService.insertAdmin(account));
 
