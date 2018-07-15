@@ -78,6 +78,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .ignoringAntMatchers("/h2/**")
                 .and()
                     .logout()
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
+                        .logoutSuccessUrl("/")
                         .logoutUrl("/logout");
     }
 }
