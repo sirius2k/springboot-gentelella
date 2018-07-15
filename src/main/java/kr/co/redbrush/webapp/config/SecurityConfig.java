@@ -77,6 +77,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf()
                         .ignoringAntMatchers("/h2/**")
                 .and()
-                    .logout();
+                    .logout()
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
+                        .logoutSuccessUrl("/")
+                        .logoutUrl("/logout");
     }
 }

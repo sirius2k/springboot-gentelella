@@ -27,9 +27,10 @@ public class CustomErrorController {
     }
 
     // TODO : Implement or remove below code
-    /*
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, ModelMap model) {
+        LOGGER.debug("Error page process!");
+
         StringBuilder view = new StringBuilder("error");
 
         getHttpStatus(request).ifPresent(httpStatus -> {
@@ -55,5 +56,4 @@ public class CustomErrorController {
 
         return Optional.ofNullable(HttpStatus.resolve(statusCode));
     }
-    */
 }
