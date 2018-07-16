@@ -4,8 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -15,14 +19,11 @@ import java.util.Optional;
 @Slf4j
 public class CustomErrorController implements ErrorController {
 
-    // TODO : Remove if below code is not necessary
-    /*
     @ExceptionHandler(BindException.class)
     @ResponseBody
     public BindingResult handleBindException(BindException exception) {
         return exception.getBindingResult();
     }
-    */
 
     // TODO : Implement or remove below code
     @RequestMapping("/error")
