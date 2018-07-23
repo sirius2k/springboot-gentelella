@@ -17,9 +17,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,18 +30,24 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-public class DefaultAuthenticationProviderTest {
+public class DefaultAuthenticationSuccessHandlerTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @InjectMocks
-    public DefaultAuthenticationProvider defaultAuthenticationProvider = new DefaultAuthenticationProvider();
+    public DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler = new DefaultAuthenticationSuccessHandler();
 
     @Mock
-    private UserDetailsService userDetailsService;
+    private AccountService accountService;
 
     @Mock
-    private UsernamePasswordAuthenticationToken token;
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private Authentication authentication;
 
     private String username = "user";
     private String password = "password";
@@ -62,48 +69,16 @@ public class DefaultAuthenticationProviderTest {
         account.setRoles(accountRoles);
 
         userDetails = new SecureAccount(account);
-
-        when(userDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
-        when(userDetailsService.loadUserByUsername(invalidUsername)).thenReturn(null);
-    }
-
-    @Test(expected = UsernameNotFoundException.class)
-    public void testAuthenticateShouldReturnUsernameNotFoundException() throws Exception {
-        when(token.getName()).thenReturn(null);
-
-        defaultAuthenticationProvider.authenticate(token);
-    }
-
-    @Test(expected = BadCredentialsException.class)
-    public void testAuthenticateShouldReturnBadCredentialsException() throws Exception {
-        when(token.getName()).thenReturn(username);
-        when(token.getCredentials()).thenReturn(null);
-
-        defaultAuthenticationProvider.authenticate(token);
     }
 
     @Test
     public void testAuthenticate() throws Exception {
-        when(token.getName()).thenReturn(username);
-        when(token.getCredentials()).thenReturn(password);
-
-        Authentication authentication = defaultAuthenticationProvider.authenticate(token);
+        defaultAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
         LOGGER.debug("authentication : {}", authentication);
 
         assertThat("Unexpected value.", authentication, notNullValue());
         assertThat("Unexpected value.", authentication.getPrincipal(), is(username));
         assertThat("Unexpected value.", authentication.getCredentials(), is(password));
-    }
-
-    @Test
-    public void testSupports() throws Exception {
-        boolean positiveResult = defaultAuthenticationProvider.supports(UsernamePasswordAuthenticationToken.class);
-
-        assertThat("Unexpected value.", positiveResult, is(true));
-
-        boolean negativeResult = defaultAuthenticationProvider.supports(TestingAuthenticationToken.class);
-
-        assertThat("Unexpected value.", negativeResult, is(false));
     }
 }

@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,11 +31,14 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @CreationTimestamp
+    @Column
+    private Date lastLogin;
+
+    @CreatedDate
     @Column
     private Date createdDate;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column
     private Date updatedDate;
 
