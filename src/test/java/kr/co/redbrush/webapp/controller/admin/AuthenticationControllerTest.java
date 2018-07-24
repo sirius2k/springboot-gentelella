@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -158,5 +159,20 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
         assertThat("Unexpected value.", result.isSuccess(), is(false));
         verify(messageSourceService).getMessage(MessageKey.ADMIN_ALREADY_CREATED);
+    }
+
+    @Test
+    public void testModelMapper() throws Exception {
+        SignupForm signupForm = new SignupForm("userId", "name", "test@test.com", "password");
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        Account account = modelMapper.map(signupForm, Account.class);
+
+        assertThat("Unexpected value.", signupForm.getUserId(), is(account.getUserId()));
+        assertThat("Unexpected value.", signupForm.getName(), is(account.getName()));
+        assertThat("Unexpected value.", signupForm.getEmail(), is(account.getEmail()));
+        assertThat("Unexpected value.", signupForm.getPassword(), is(account.getPassword()));
     }
 }

@@ -20,6 +20,6 @@ public class LoginHistory {
     private Date loginDate;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_account_history"))
+    @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_account_login_history"))
     private Account account;
 }

@@ -27,7 +27,7 @@
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.16.18</lombok.version>
         <mockito.version>1.10.19</mockito.version>
-        <modelmapper.version>2.0.0</modelmapper.version>
+        <modelmapper.version>2.1.0</modelmapper.version>
         <clover.version>4.2.1</clover.version>
     </properties>
 

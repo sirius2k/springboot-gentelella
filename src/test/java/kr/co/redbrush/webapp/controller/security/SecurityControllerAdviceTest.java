@@ -1,7 +1,6 @@
 package kr.co.redbrush.webapp.controller.security;
 
 import kr.co.redbrush.webapp.controller.ControllerTestBase;
-import kr.co.redbrush.webapp.controller.error.CustomErrorController;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
