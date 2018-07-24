@@ -20,7 +20,7 @@ public class WebMVCConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        return new ModelMapper();
+        return modelMapper;
     }
 
 }
