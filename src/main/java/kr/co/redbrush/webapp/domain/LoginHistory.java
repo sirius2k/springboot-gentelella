@@ -11,14 +11,15 @@ import java.util.List;
 
 @Data
 @Entity
-public class AccountLog {
+public class LoginHistory {
     @Id
     @GeneratedValue
-    private long alid;
+    private long id;
 
     @Column
-    private Date loginTime;
+    private Date loginDate;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_account_history"))
     private Account account;
 }

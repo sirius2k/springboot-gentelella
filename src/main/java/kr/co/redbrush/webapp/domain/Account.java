@@ -17,7 +17,7 @@ import java.util.List;
 public class Account {
     @Id
     @GeneratedValue
-    private long acid;
+    private long id;
 
     @Column(nullable = false, unique = true, length = 50)
     private String userId;

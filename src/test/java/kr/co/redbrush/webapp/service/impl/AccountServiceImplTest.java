@@ -70,7 +70,7 @@ public class AccountServiceImplTest {
     @Before
     public void before() {
         account = new Account();
-        account.setAcid(id);
+        account.setId(id);
         account.setUserId(userId);
         account.setName(name);
         account.setPassword(password);
