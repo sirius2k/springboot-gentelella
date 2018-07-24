@@ -14,6 +14,7 @@ import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.parboiled.common.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Qualifier("userDetailsService")
 @Slf4j
 public class AccountServiceImpl implements UserDetailsService, AccountService {
     @Autowired

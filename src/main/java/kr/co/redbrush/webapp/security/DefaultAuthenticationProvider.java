@@ -1,14 +1,15 @@
 package kr.co.redbrush.webapp.security;
 
-import kr.co.redbrush.webapp.service.impl.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +17,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DefaultAuthenticationProvider implements AuthenticationProvider {
     @Autowired
-    private AccountServiceImpl accountServiceImpl;
+    @Qualifier("userDetailsService")
+    private UserDetailsService userDetailsService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication;
-        UserDetails userDetails = accountServiceImpl.loadUserByUsername(token.getName());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(token.getName());
 
         if (userDetails == null) {
             LOGGER.info("Invalid username : {}", token.getName());
