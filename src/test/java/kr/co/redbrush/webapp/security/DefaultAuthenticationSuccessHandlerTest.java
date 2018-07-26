@@ -2,8 +2,10 @@ package kr.co.redbrush.webapp.security;
 
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
+import kr.co.redbrush.webapp.domain.LoginHistory;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.service.AccountService;
+import kr.co.redbrush.webapp.service.LoginHistoryService;
 import kr.co.redbrush.webapp.service.impl.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -22,11 +24,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import static java.util.function.Predicate.isEqual;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -39,6 +45,9 @@ public class DefaultAuthenticationSuccessHandlerTest {
 
     @Mock
     private AccountService accountService;
+
+    @Mock
+    private LoginHistoryService loginHistoryService;
 
     @Mock
     private HttpServletRequest request;
@@ -69,16 +78,21 @@ public class DefaultAuthenticationSuccessHandlerTest {
         account.setRoles(accountRoles);
 
         userDetails = new SecureAccount(account);
+
+        when(authentication.getPrincipal()).thenReturn(userDetails);
     }
 
     @Test
     public void testAuthenticate() throws Exception {
+        LoginHistory loginHistory = new LoginHistory();
+        loginHistory.setId(1L);
+        loginHistory.setLoginDate(new Date());
+
+        when(loginHistoryService.insert(any(LoginHistory.class))).thenReturn(loginHistory);
+
         defaultAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
-        LOGGER.debug("authentication : {}", authentication);
-
-        assertThat("Unexpected value.", authentication, notNullValue());
-        assertThat("Unexpected value.", authentication.getPrincipal(), is(username));
-        assertThat("Unexpected value.", authentication.getCredentials(), is(password));
+        verify(accountService).update(userDetails.getAccount());
+        assertThat("Unexpected value.", userDetails.getAccount().getLastLogin(), is(loginHistory.getLoginDate()));
     }
 }

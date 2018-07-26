@@ -54,6 +54,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
         }
     }
 
+    @Override
     public Account insertAdmin(Account account) {
         addAdminRole(account);
 
@@ -68,6 +69,11 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
         }
     }
 
+    @Override
+    public Account update(Account account) {
+        return accountRepository.save(account);
+    }
+
     private void addAdminRole(Account account) {
         List<AccountRole> roles = new ArrayList<>();
         AccountRole adminRole = accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName());
@@ -80,6 +86,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
         account.setRoles(roles);
     }
 
+    @Override
     public long getCount() {
         return accountRepository.count();
     }
