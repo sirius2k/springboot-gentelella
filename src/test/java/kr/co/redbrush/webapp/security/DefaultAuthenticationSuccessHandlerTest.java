@@ -84,15 +84,13 @@ public class DefaultAuthenticationSuccessHandlerTest {
 
     @Test
     public void testAuthenticate() throws Exception {
-        LoginHistory loginHistory = new LoginHistory();
-        loginHistory.setId(1L);
-        loginHistory.setLoginDate(new Date());
-
-        when(loginHistoryService.insert(any(LoginHistory.class))).thenReturn(loginHistory);
-
         defaultAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
-        verify(accountService).update(userDetails.getAccount());
-        assertThat("Unexpected value.", userDetails.getAccount().getLastLogin(), is(loginHistory.getLoginDate()));
+        verify(accountService).processLoginSuccess(userDetails.getAccount());
+    }
+
+    @Test
+    public void testProcessLoginSuccess() throws Exception {
+        // TODO : Implement
     }
 }

@@ -2,6 +2,7 @@ package kr.co.redbrush.webapp.service.impl;
 
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
+import kr.co.redbrush.webapp.domain.LoginHistory;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.enums.MessageKey;
 import kr.co.redbrush.webapp.enums.Role;
@@ -9,6 +10,7 @@ import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
 import kr.co.redbrush.webapp.exception.PasswordEmptyException;
 import kr.co.redbrush.webapp.repository.AccountRepository;
 import kr.co.redbrush.webapp.repository.AccountRoleRepository;
+import kr.co.redbrush.webapp.repository.LoginHistoryRepository;
 import kr.co.redbrush.webapp.service.AccountService;
 import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +37,9 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
 
     @Autowired
     private AccountRoleRepository accountRoleRepository;
+
+    @Autowired
+    private LoginHistoryRepository loginHistoryRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -89,5 +95,14 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
     @Override
     public long getCount() {
         return accountRepository.count();
+    }
+
+    @Override
+    public void processLoginSuccess(Account account) {
+        LoginHistory loginHistory = new LoginHistory();
+        loginHistory.setAccount(account);
+        loginHistory.setLoginDate(new Date());
+
+        loginHistoryRepository.save(loginHistory);
     }
 }

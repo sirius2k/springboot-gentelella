@@ -28,7 +28,16 @@ public class IndexControllerTest extends ControllerTestBase {
     public void testIndex() throws Exception {
         String view = indexController.index(model);
 
-        assertThat("Unexpected value.", view, is("index"));
-        assertThat("Unexpected value.", model.get("title"), is("Springboot Web Service"));
+        assertThat("Unexpected value.", view, is("index1"));
+        assertThat("Unexpected value.", model.get("title"), is("Dashboard 1"));
+    }
+
+    @Test
+    public void testIndex2() throws Exception {
+        int indexNum = 2;
+        String view = indexController.index2(model, indexNum);
+
+        assertThat("Unexpected value.", view, is("index" + indexNum));
+        assertThat("Unexpected value.", model.get("title"), is("Dashboard " + indexNum));
     }
 }
