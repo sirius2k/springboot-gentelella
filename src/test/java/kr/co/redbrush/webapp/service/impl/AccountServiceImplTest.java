@@ -154,4 +154,14 @@ public class AccountServiceImplTest {
 
         assertThat("Unexpected value.", count, is(1L));
     }
+
+    @Test
+    public void testUpdate() {
+        when(accountRepository.save(account)).thenReturn(account);
+
+        Account expectedAccount = accountService.update(account);
+
+        assertThat("Unexpected value.", account, is(expectedAccount));
+    }
+
 }
