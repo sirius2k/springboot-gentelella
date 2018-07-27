@@ -33,13 +33,6 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
             Authentication authentication) throws IOException, ServletException {
 
         SecureAccount secureAccount = (SecureAccount)authentication.getPrincipal();
-
-        LoginHistory loginHistory = new LoginHistory();
-        loginHistory.setLoginDate(new Date());
-        loginHistoryService.insert(loginHistory);
-
-        Account account = secureAccount.getAccount();
-        account.setLastLogin(loginHistory.getLoginDate());
-        accountService.update(account);
+        accountService.processLoginSuccess(secureAccount.getAccount());
     }
 }
