@@ -2,18 +2,21 @@ package kr.co.redbrush.webapp.service.impl;
 
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
+import kr.co.redbrush.webapp.domain.LoginHistory;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.enums.Role;
 import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
 import kr.co.redbrush.webapp.exception.PasswordEmptyException;
 import kr.co.redbrush.webapp.repository.AccountRepository;
 import kr.co.redbrush.webapp.repository.AccountRoleRepository;
+import kr.co.redbrush.webapp.repository.LoginHistoryRepository;
 import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,6 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -50,6 +54,9 @@ public class AccountServiceImplTest {
 
     @Mock
     private AccountRoleRepository accountRoleRepository;
+
+    @Mock
+    private LoginHistoryRepository loginHistoryRepository;
 
     @Mock
     private MessageSourceService messageSourceService;
@@ -112,17 +119,8 @@ public class AccountServiceImplTest {
     @Test
     public void testInsertAdmin() {
         when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
-        when(accountRepository.save(argThat(new ArgumentMatcher<Account>() {
-            @Override
-            public boolean matches(Object argument) {
-                Account account = (Account)argument;
-
-                if (passwordEncoder.matches(password, account.getPassword())) {
-                    return true;
-                }
-
-                return false;
-            }
+        when(accountRepository.save(argThat(account -> {
+            return passwordEncoder.matches(password, account.getPassword());
         }))).thenReturn(account);
 
         Account expectedAccount = accountService.insertAdmin(account);
@@ -164,4 +162,10 @@ public class AccountServiceImplTest {
         assertThat("Unexpected value.", account, is(expectedAccount));
     }
 
+    @Test
+    public void testProcessLoginSuccess() throws Exception {
+        accountService.processLoginSuccess(account);
+
+        verify(loginHistoryRepository).save(argThat(loginHistory -> loginHistory.getAccount() == account));
+    }
 }

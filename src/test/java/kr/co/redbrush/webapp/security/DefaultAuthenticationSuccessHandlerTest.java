@@ -88,9 +88,4 @@ public class DefaultAuthenticationSuccessHandlerTest {
 
         verify(accountService).processLoginSuccess(userDetails.getAccount());
     }
-
-    @Test
-    public void testProcessLoginSuccess() throws Exception {
-        // TODO : Implement
-    }
 }
