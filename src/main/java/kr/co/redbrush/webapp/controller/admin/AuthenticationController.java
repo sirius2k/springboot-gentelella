@@ -6,6 +6,7 @@ import kr.co.redbrush.webapp.dto.RequestResult;
 import kr.co.redbrush.webapp.dto.SuccessfulResult;
 import kr.co.redbrush.webapp.enums.MessageKey;
 import kr.co.redbrush.webapp.form.SignupForm;
+import kr.co.redbrush.webapp.service.AccountService;
 import kr.co.redbrush.webapp.service.MessageSourceService;
 import kr.co.redbrush.webapp.service.impl.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class AuthenticationController {
     public static final String VIEW_SIGNUP_REDIRECT = "/admin/signup";
 
     @Autowired
-    private AccountServiceImpl accountService;
+    private AccountService accountService;
 
     @Autowired
     private ModelMapper modelMapper;

@@ -26,7 +26,7 @@
         <junit.version>4.12</junit.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.16.18</lombok.version>
-        <mockito.version>1.10.19</mockito.version>
+        <mockito.version>2.20.1</mockito.version>
         <modelmapper.version>2.1.0</modelmapper.version>
         <clover.version>4.2.1</clover.version>
     </properties>
@@ -49,6 +49,11 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
         <dependency>

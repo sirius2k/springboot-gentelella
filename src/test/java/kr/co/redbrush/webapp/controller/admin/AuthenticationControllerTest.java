@@ -5,20 +5,21 @@ import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.dto.RequestResult;
 import kr.co.redbrush.webapp.enums.MessageKey;
 import kr.co.redbrush.webapp.form.SignupForm;
+import kr.co.redbrush.webapp.service.AccountService;
 import kr.co.redbrush.webapp.service.MessageSourceService;
-import kr.co.redbrush.webapp.service.impl.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.BindException;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
@@ -42,7 +43,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     private AuthenticationException authenticationException;
 
     @Mock
-    private AccountServiceImpl accountServiceImpl;
+    private AccountService accountService;
 
     @Mock
     private MessageSourceService messageSourceService;
@@ -50,11 +51,12 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     @Mock
     private BindingResult bindingResult;
 
-    @Mock
-    private ModelMapper modelMapper;
-
     @Before
     public void before() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        ReflectionTestUtils.setField(authenticationController, "modelMapper", modelMapper);
     }
 
     @Test
@@ -63,7 +65,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         boolean expectedErrorParam = false;
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
-        when(accountServiceImpl.getCount()).thenReturn(1L);
+        when(accountService.getCount()).thenReturn(1L);
 
         ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
@@ -80,7 +82,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(authenticationException);
         when(authenticationException.getMessage()).thenReturn(errorMessage);
-        when(accountServiceImpl.getCount()).thenReturn(1L);
+        when(accountService.getCount()).thenReturn(1L);
 
         ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
@@ -95,7 +97,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         boolean expectedErrorParam = false;
 
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
-        when(accountServiceImpl.getCount()).thenReturn(0L);
+        when(accountService.getCount()).thenReturn(0L);
 
         ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
 
@@ -107,7 +109,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
     @Test
     public void testSignupFormWithoutReigsteredAccount() throws Exception {
-        when(accountServiceImpl.getCount()).thenReturn(0L);
+        when(accountService.getCount()).thenReturn(0L);
 
         ModelAndView modelAndView = authenticationController.signupForm();
 
@@ -116,7 +118,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
     @Test
     public void testSignupFormWithReigsteredAccount() throws Exception {
-        when(accountServiceImpl.getCount()).thenReturn(1L);
+        when(accountService.getCount()).thenReturn(1L);
 
         ModelAndView modelAndView = authenticationController.signupForm();
 
@@ -127,9 +129,13 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     @Test
     public void testSignupWithoutReigsteredAccount() throws Exception {
         SignupForm signupForm = new SignupForm();
+        signupForm.setUserId("test");
+        signupForm.setName("name");
+        signupForm.setEmail("test@test.com");
+        signupForm.setPassword("password");
 
-        when(accountServiceImpl.getCount()).thenReturn(0L);
-        when(accountServiceImpl.insertAdmin(any(Account.class))).thenReturn(new Account());
+        when(accountService.getCount()).thenReturn(0L);
+        when(accountService.insertAdmin(any(Account.class))).thenReturn(new Account());
 
         RequestResult result = authenticationController.signup(signupForm, bindingResult);
 
@@ -140,8 +146,8 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     public void testSignupSaveError() throws Exception {
         SignupForm signupForm = new SignupForm();
 
-        when(accountServiceImpl.getCount()).thenReturn(0L);
-        when(accountServiceImpl.insertAdmin(any(Account.class))).thenReturn(null);
+        when(accountService.getCount()).thenReturn(0L);
+        when(accountService.insertAdmin(any(Account.class))).thenReturn(null);
 
         RequestResult result = authenticationController.signup(signupForm, bindingResult);
 
@@ -153,7 +159,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     public void testSignupWithReigsteredAccount() throws Exception {
         SignupForm signupForm = new SignupForm();
 
-        when(accountServiceImpl.getCount()).thenReturn(1L);
+        when(accountService.getCount()).thenReturn(1L);
 
         RequestResult result = authenticationController.signup(signupForm, bindingResult);
 
