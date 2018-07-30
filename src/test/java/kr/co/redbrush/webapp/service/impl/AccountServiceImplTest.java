@@ -167,5 +167,6 @@ public class AccountServiceImplTest {
         accountService.processLoginSuccess(account);
 
         verify(loginHistoryRepository).save(argThat(loginHistory -> loginHistory.getAccount() == account));
+        verify(accountRepository).save(argThat(account -> account.getLastLogin() != null));
     }
 }

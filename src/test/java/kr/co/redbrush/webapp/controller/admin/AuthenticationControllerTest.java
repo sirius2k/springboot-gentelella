@@ -168,6 +168,18 @@ public class AuthenticationControllerTest extends ControllerTestBase {
     }
 
     @Test
+    public void testSignupBindingError() throws Exception {
+        SignupForm signupForm = new SignupForm();
+
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        RequestResult result = authenticationController.signup(signupForm, bindingResult);
+
+        assertThat("Unexpected value.", result.isSuccess(), is(false));
+        verify(messageSourceService).getMessage(MessageKey.VALIDATION_FAILED);
+    }
+
+    @Test
     public void testModelMapper() throws Exception {
         SignupForm signupForm = new SignupForm("userId", "name", "test@test.com", "password");
 

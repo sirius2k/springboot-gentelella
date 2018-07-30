@@ -71,8 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin()
                         .loginPage("/login/form")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/")
                         .failureUrl("/login/form?error=true")
+                        .defaultSuccessUrl("/")
                         .usernameParameter("id")
                         .passwordParameter("password")
                         .successHandler(authenticationSuccessHandler)
@@ -90,5 +90,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .invalidateHttpSession(true)
                         .logoutSuccessUrl("/")
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+
     }
 }

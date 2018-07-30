@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -98,11 +99,14 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
     }
 
     @Override
+    @Transactional
     public void processLoginSuccess(Account account) {
         LoginHistory loginHistory = new LoginHistory();
         loginHistory.setAccount(account);
         loginHistory.setLoginDate(new Date());
-
         loginHistoryRepository.save(loginHistory);
+
+        account.setLastLogin(loginHistory.getLoginDate());
+        accountRepository.save(account);
     }
 }
