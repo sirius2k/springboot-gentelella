@@ -1,6 +1,5 @@
 package kr.co.redbrush.webapp.repository;
 
-import kr.co.redbrush.webapp.domain.AccountRole;
 import kr.co.redbrush.webapp.domain.LoginHistory;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;

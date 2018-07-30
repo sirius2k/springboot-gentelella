@@ -2,7 +2,6 @@ package kr.co.redbrush.webapp.service.impl;
 
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
-import kr.co.redbrush.webapp.domain.LoginHistory;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.enums.Role;
 import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
@@ -12,18 +11,14 @@ import kr.co.redbrush.webapp.repository.AccountRoleRepository;
 import kr.co.redbrush.webapp.repository.LoginHistoryRepository;
 import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -167,5 +162,6 @@ public class AccountServiceImplTest {
         accountService.processLoginSuccess(account);
 
         verify(loginHistoryRepository).save(argThat(loginHistory -> loginHistory.getAccount() == account));
+        verify(accountRepository).save(argThat(account -> account.getLastLogin() != null));
     }
 }

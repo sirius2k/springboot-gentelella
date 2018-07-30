@@ -13,7 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
@@ -165,6 +164,18 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
         assertThat("Unexpected value.", result.isSuccess(), is(false));
         verify(messageSourceService).getMessage(MessageKey.ADMIN_ALREADY_CREATED);
+    }
+
+    @Test
+    public void testSignupBindingError() throws Exception {
+        SignupForm signupForm = new SignupForm();
+
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        RequestResult result = authenticationController.signup(signupForm, bindingResult);
+
+        assertThat("Unexpected value.", result.isSuccess(), is(false));
+        verify(messageSourceService).getMessage(MessageKey.VALIDATION_FAILED);
     }
 
     @Test

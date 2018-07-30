@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="{{i18n "html.lang"}}">
 <head>
-  {{#block "header"}}
-    {{>layout/header}}
-  {{/block}}
+    {{#block "head"}}
+        {{>layout/head_common}}
+    {{/block}}
+    {{#block "head_common"}}
+        {{>layout/head_common}}
+    {{/block}}
+    {{#block "head_stylesheet_page"}}
+        <!-- StyleSheet for each page -->
+    {{/block}}
 </head>
 
 <body class="nav-md">
