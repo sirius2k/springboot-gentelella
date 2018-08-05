@@ -12,7 +12,7 @@ import java.util.Map;
 public class ChartController {
 
     @GetMapping({"/chart/{chartType}"})
-    public String uiElement(Map<String, Object> model, @PathVariable("chartType") String chartType) {
+    public String chart(Map<String, Object> model, @PathVariable("chartType") String chartType) {
         model.put("title", "Chart " + chartType);
 
         return "chart_" + chartType;

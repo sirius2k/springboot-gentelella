@@ -9,12 +9,12 @@ import java.util.Map;
 
 @Controller
 @Slf4j
-public class TablesController {
+public class ExtrasController {
 
-    @GetMapping({"/tables/{tableType}"})
-    public String table(Map<String, Object> model, @PathVariable("tableType") String tableType) {
-        model.put("title", "Tables " + tableType);
+    @GetMapping({"/extras/page/{pageType}"})
+    public String extraPages(Map<String, Object> model, @PathVariable("pageType") String pageType) {
+        model.put("title", "Extra Page " + pageType);
 
-        return "tables_" + tableType;
+        return "extras_page_" + pageType;
     }
 }
