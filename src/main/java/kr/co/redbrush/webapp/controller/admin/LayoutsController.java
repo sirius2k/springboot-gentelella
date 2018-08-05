@@ -9,12 +9,12 @@ import java.util.Map;
 
 @Controller
 @Slf4j
-public class TablesController {
+public class LayoutsController {
 
-    @GetMapping({"/tables/{tableType}"})
-    public String table(Map<String, Object> model, @PathVariable("tableType") String tableType) {
-        model.put("title", "Tables " + tableType);
+    @GetMapping({"/layouts/fixed/{layoutType}"})
+    public String uiElement(Map<String, Object> model, @PathVariable("layoutType") String layoutType) {
+        model.put("title", "Layout " + layoutType);
 
-        return "tables_" + tableType;
+        return "layouts_fixed_" + layoutType;
     }
 }

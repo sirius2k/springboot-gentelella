@@ -9,12 +9,12 @@ import java.util.Map;
 
 @Controller
 @Slf4j
-public class TablesController {
+public class MultiLevelMenuController {
 
-    @GetMapping({"/tables/{tableType}"})
-    public String table(Map<String, Object> model, @PathVariable("tableType") String tableType) {
-        model.put("title", "Tables " + tableType);
+    @GetMapping({"/menu/level/{level}"})
+    public String multiLevelMenu(Map<String, Object> model, @PathVariable("level") Integer level) {
+        model.put("title", "Multi Level Menu : level " + level);
 
-        return "tables_" + tableType;
+        return "multi_level_menu_" + level;
     }
 }

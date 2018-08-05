@@ -25,9 +25,9 @@ public class TablesControllerTest extends ControllerTestBase {
     }
 
     @Test
-    public void testUIElement() throws Exception {
+    public void testTables() throws Exception {
         String tableType = "general";
-        String view = tablesController.uiElement(model, tableType);
+        String view = tablesController.table(model, tableType);
 
         assertThat("Unexpected value.", view, is("tables_" + tableType));
         assertThat("Unexpected value.", model.get("title"), is("Tables " + tableType));
