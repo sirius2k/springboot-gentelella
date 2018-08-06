@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{i18n "html.lang"}}">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -27,8 +27,8 @@
         <div class="col-md-12">
           <div class="col-middle">
             <div class="text-center">
-              <h1 class="error-number">000</h1>
-              <h2>ERROR</h2>
+              <h1 class="error-number">{{status}}</h1>
+              <h2>{{error}}</h2>
               <p>We track these errors automatically, but if the problem persists feel free to contact us. In the meantime, try refreshing. <a href="#">Report this?</a>
               </p>
               <div class="mid_center">
@@ -44,8 +44,9 @@
                   </div>
                 </form>
               </div>
-              <h2>URL : {{url}}</h2>
-              <p>{{trace}}</a></p>
+              <h2>Path : {{path}}</h2>
+              <p>Exception : {{exception}}</p>
+              <p>Trace : {{trace}}</p>
             </div>
           </div>
         </div>
