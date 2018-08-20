@@ -30,7 +30,7 @@ import java.util.Map;
 @Component
 @Slf4j
 public class SpringSecurityHelper implements Helper<Object> {
-    private static final String TAG_NAME = "authorize";
+    public static final String NAME = "authorize";
 
     @Autowired
     private ApplicationContext context;
