@@ -102,6 +102,6 @@ public class SpringSecurityHelper implements Helper<Object> {
             }
         }
 
-        throw new IOException("No visible WebSecurityExpressionHandler instance could be found in the application");
+        throw new IOException("No visible SecurityExpressionHandler instance could be found in the application");
     }
 }
