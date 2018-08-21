@@ -13,8 +13,18 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 @Configuration
-@ConditionalOnClass(HandlebarsViewResolver.class)
-public class WebMVCConfig {
+public class WebApplicationConfig {
+    @Autowired
+    private HandlebarsViewResolver handlebarsViewResolver;
+
+    @Autowired
+    private SpringSecurityHelper springSecurityHelper;
+
+    @PostConstruct
+    public void registerHelper() {
+        handlebarsViewResolver.registerHelper(SpringSecurityHelper.NAME, springSecurityHelper);
+    }
+
     @Bean
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
@@ -26,20 +36,5 @@ public class WebMVCConfig {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         return modelMapper;
-    }
-
-    @Configuration
-    @ConditionalOnClass(SpringSecurityHelper.class)
-    static class SpringSecurityHelperAutoConfiguration {
-        @Autowired
-        private HandlebarsViewResolver handlebarsViewResolver;
-
-        @Autowired
-        private SpringSecurityHelper springSecurityHelper;
-
-        @PostConstruct
-        public void registerHelper() {
-            handlebarsViewResolver.registerHelper(SpringSecurityHelper.NAME, springSecurityHelper);
-        }
     }
 }
