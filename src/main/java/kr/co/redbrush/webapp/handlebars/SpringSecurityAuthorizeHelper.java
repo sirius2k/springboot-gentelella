@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class SpringSecurityHelper implements Helper<Object> {
+public class SpringSecurityAuthorizeHelper implements Helper<Object> {
     public static final String NAME = "sec:authorize";
 
     @Autowired
