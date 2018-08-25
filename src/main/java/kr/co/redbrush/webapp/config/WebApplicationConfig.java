@@ -1,11 +1,10 @@
 package kr.co.redbrush.webapp.config;
 
 import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
-import kr.co.redbrush.webapp.handlebars.SpringSecurityHelper;
+import kr.co.redbrush.webapp.handlebars.SpringSecurityAuthorizeHelper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -18,11 +17,11 @@ public class WebApplicationConfig {
     private HandlebarsViewResolver handlebarsViewResolver;
 
     @Autowired
-    private SpringSecurityHelper springSecurityHelper;
+    private SpringSecurityAuthorizeHelper springSecurityAuthorizeHelper;
 
     @PostConstruct
     public void registerHelper() {
-        handlebarsViewResolver.registerHelper(SpringSecurityHelper.NAME, springSecurityHelper);
+        handlebarsViewResolver.registerHelper(SpringSecurityAuthorizeHelper.NAME, springSecurityAuthorizeHelper);
     }
 
     @Bean
