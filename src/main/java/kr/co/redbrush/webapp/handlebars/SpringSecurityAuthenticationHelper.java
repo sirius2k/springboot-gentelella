@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class SpringSecurityAuthorizeHelper implements Helper<Object> {
+public class SpringSecurityAuthenticationHelper implements Helper<Object> {
     public static final String NAME = "sec:authorize";
 
     @Autowired
@@ -84,7 +84,10 @@ public class SpringSecurityAuthorizeHelper implements Helper<Object> {
         try {
             accessExpression = securityExpressionHandler.getExpressionParser().parseExpression(access);
         } catch (ParseException e) {
-            throw new IOException(e);
+            IOException ioException = new IOException();
+            ioException.initCause(e);
+
+            throw ioException;
         }
 
         return accessExpression;

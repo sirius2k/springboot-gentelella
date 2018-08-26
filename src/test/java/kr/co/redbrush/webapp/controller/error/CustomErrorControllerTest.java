@@ -51,4 +51,9 @@ public class CustomErrorControllerTest extends ControllerTestBase {
         assertThat("Unexpected value.", modelMap.get("exception"), is(exception));
         assertThat("Unexpected value.", modelMap.get("servletName"), is(servletName));
     }
+
+    @Test
+    public void testGetErrorPath() {
+        assertThat("Unexpected value.", customErrorController.getErrorPath(), is("/error"));
+    }
 }
