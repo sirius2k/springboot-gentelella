@@ -10,15 +10,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import javax.annotation.PostConstruct;
 
 @Configuration
-public class WebApplicationConfig implements WebMvcConfigurer {
+@EnableWebMvc
+public class WebApplicationConfig extends WebMvcConfigurationSupport {
     @Autowired
     private HandlebarsViewResolver handlebarsViewResolver;
 
@@ -48,6 +46,7 @@ public class WebApplicationConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(springSecurityInterceptor);
+        registry.addInterceptor(springSecurityInterceptor)
+                .addPathPatterns("/**");
     }
 }
