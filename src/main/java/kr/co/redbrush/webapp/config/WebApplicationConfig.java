@@ -15,14 +15,14 @@ import org.springframework.web.servlet.config.annotation.*;
 import javax.annotation.PostConstruct;
 
 @Configuration
-@EnableWebMvc
-public class WebApplicationConfig extends WebMvcConfigurationSupport {
+public class WebApplicationConfig {
     @Autowired
     private HandlebarsViewResolver handlebarsViewResolver;
 
     @Autowired
     private SpringSecurityAuthorizeHelper springSecurityAuthorizeHelper;
 
+    // TODO : Activate interceptor
     @Autowired
     private SpringSecurityInterceptor springSecurityInterceptor;
 
@@ -42,11 +42,5 @@ public class WebApplicationConfig extends WebMvcConfigurationSupport {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         return modelMapper;
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(springSecurityInterceptor)
-                .addPathPatterns("/**");
     }
 }
