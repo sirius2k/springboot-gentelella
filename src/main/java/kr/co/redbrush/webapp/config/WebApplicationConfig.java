@@ -16,17 +16,12 @@ import org.springframework.web.servlet.config.annotation.*;
 import javax.annotation.PostConstruct;
 
 @Configuration
-@EnableWebMvc
 public class WebApplicationConfig {
     @Autowired
     private HandlebarsViewResolver handlebarsViewResolver;
 
     @Autowired
     private SpringSecurityAuthorizeHelper springSecurityAuthorizeHelper;
-
-    // TODO : Activate interceptor with implementing WebSecurtyConfigurer
-    @Autowired
-    private SpringSecurityInterceptor springSecurityInterceptor;
 
     @PostConstruct
     public void registerHelper() {
