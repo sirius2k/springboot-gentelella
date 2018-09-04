@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpringBootWebApplication.class)
+@TestPropertySource(locations="classpath:application-test.properties")
 @Slf4j
 public class SpringSecurityAuthorizeHelperTest {
     @Rule
