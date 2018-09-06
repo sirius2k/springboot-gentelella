@@ -3,6 +3,7 @@ package kr.co.redbrush.webapp.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -13,7 +14,7 @@ public class LoginHistory {
     private long id;
 
     @Column
-    private Date loginDate;
+    private LocalDateTime loginDate;
 
     @ManyToOne
     @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_account_login_history"))
