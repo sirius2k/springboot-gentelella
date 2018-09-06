@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -32,15 +33,15 @@ public class Account {
     private String email;
 
     @Column
-    private Date lastLogin;
+    private LocalDateTime lastLogin;
 
     @CreatedDate
     @Column
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
     @Column
-    private Date updatedDate;
+    private LocalDateTime updatedDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "acid")

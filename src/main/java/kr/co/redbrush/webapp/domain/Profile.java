@@ -7,6 +7,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -21,11 +23,14 @@ public class Profile {
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    @Column(nullable = false, unique = true)
+    private LocalDate birthday;
+
     @CreatedDate
     @Column
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
     @Column
-    private Date updatedDate;
+    private LocalDateTime updatedDate;
 }

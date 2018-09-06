@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,7 +31,7 @@ public class LoginHistoryServiceImplTest {
 
     private LoginHistory loginHistory;
     private Long id = 1L;
-    private Date loginDate = new Date();
+    private LocalDateTime loginDate = LocalDateTime.now();
 
     @Before
     public void before() {
