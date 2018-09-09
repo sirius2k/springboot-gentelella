@@ -62,6 +62,11 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
     }
 
     @Override
+    public Account getAccount(String userId) {
+        return accountRepository.findAccountByUserId(userId);
+    }
+
+    @Override
     public Account insertAdmin(Account account) {
         addAdminRole(account);
 

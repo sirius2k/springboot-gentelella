@@ -112,6 +112,15 @@ public class AccountServiceImplTest {
     }
 
     @Test
+    public void testAccount() {
+        when(accountRepository.findAccountByUserId(userId)).thenReturn(account);
+
+        Account expectedAccount = accountService.getAccount(userId);
+
+        assertThat("Unexpected value.", expectedAccount, is(account));
+    }
+
+    @Test
     public void testInsertAdmin() {
         when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
         when(accountRepository.save(argThat(account -> {
