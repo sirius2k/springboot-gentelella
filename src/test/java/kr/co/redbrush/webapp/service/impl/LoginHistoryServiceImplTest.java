@@ -1,6 +1,6 @@
 package kr.co.redbrush.webapp.service.impl;
 
-import kr.co.redbrush.webapp.domain.LoginHistory;
+import kr.co.redbrush.webapp.domain.AccessHistory;
 import kr.co.redbrush.webapp.repository.LoginHistoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -29,25 +28,25 @@ public class LoginHistoryServiceImplTest {
     @Mock
     private LoginHistoryRepository loginHistoryRepository;
 
-    private LoginHistory loginHistory;
+    private AccessHistory accessHistory;
     private Long id = 1L;
     private LocalDateTime loginDate = LocalDateTime.now();
 
     @Before
     public void before() {
-        loginHistory = new LoginHistory();
-        loginHistory.setId(id);
-        loginHistory.setLoginDate(loginDate);
+        accessHistory = new AccessHistory();
+        accessHistory.setId(id);
+        accessHistory.setLoginDate(loginDate);
     }
 
     @Test
     public void testInsert() {
-        when(loginHistoryRepository.save(loginHistory)).thenReturn(loginHistory);
+        when(loginHistoryRepository.save(accessHistory)).thenReturn(accessHistory);
 
-        LoginHistory expectedLoginHistory = loginHistoryService.insert(loginHistory);
+        AccessHistory expectedAccessHistory = loginHistoryService.insert(accessHistory);
 
-        LOGGER.debug("loginHistory : {}", expectedLoginHistory);
+        LOGGER.debug("accessHistory : {}", expectedAccessHistory);
 
-        assertThat("Unexpected value.", loginHistory, is(expectedLoginHistory));
+        assertThat("Unexpected value.", accessHistory, is(expectedAccessHistory));
     }
 }

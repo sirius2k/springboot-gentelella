@@ -1,6 +1,6 @@
 package kr.co.redbrush.webapp.service.impl;
 
-import kr.co.redbrush.webapp.domain.LoginHistory;
+import kr.co.redbrush.webapp.domain.AccessHistory;
 import kr.co.redbrush.webapp.repository.LoginHistoryRepository;
 import kr.co.redbrush.webapp.service.LoginHistoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ public class LoginHistoryServiceImpl implements LoginHistoryService {
     private LoginHistoryRepository loginHistoryRepository;
 
     @Override
-    public LoginHistory insert(LoginHistory loginHistory) {
-        return loginHistoryRepository.save(loginHistory);
+    public AccessHistory insert(AccessHistory accessHistory) {
+        return loginHistoryRepository.save(accessHistory);
     }
 }

@@ -17,7 +17,7 @@ public class SpringSecurityInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView model) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null) {
+        if (authentication != null && model != null) {
             model.addObject("principal", authentication.getPrincipal());
         }
     }
