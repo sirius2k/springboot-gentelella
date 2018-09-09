@@ -8,13 +8,16 @@ import java.util.Date;
 
 @Data
 @Entity
-public class LoginHistory {
+public class AccessHistory {
     @Id
     @GeneratedValue
     private long id;
 
     @Column
     private LocalDateTime loginDate;
+
+    @Column
+    private boolean loggedIn;
 
     @ManyToOne
     @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_account_login_history"))

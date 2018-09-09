@@ -2,7 +2,7 @@ package kr.co.redbrush.webapp.service.impl;
 
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
-import kr.co.redbrush.webapp.domain.LoginHistory;
+import kr.co.redbrush.webapp.domain.AccessHistory;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.enums.MessageKey;
 import kr.co.redbrush.webapp.enums.Role;
@@ -24,10 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,12 +101,13 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
     @Override
     @Transactional
     public void processLoginSuccess(Account account) {
-        LoginHistory loginHistory = new LoginHistory();
-        loginHistory.setAccount(account);
-        loginHistory.setLoginDate(LocalDateTime.now());
-        loginHistoryRepository.save(loginHistory);
+        AccessHistory accessHistory = new AccessHistory();
+        accessHistory.setAccount(account);
+        accessHistory.setLoggedIn(true);
+        accessHistory.setLoginDate(LocalDateTime.now());
+        loginHistoryRepository.save(accessHistory);
 
-        account.setLastLogin(loginHistory.getLoginDate());
+        account.setLastLogin(accessHistory.getLoginDate());
         accountRepository.save(account);
     }
 }

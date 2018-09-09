@@ -1,7 +1,7 @@
 package kr.co.redbrush.webapp.service;
 
-import kr.co.redbrush.webapp.domain.LoginHistory;
+import kr.co.redbrush.webapp.domain.AccessHistory;
 
 public interface LoginHistoryService {
-    LoginHistory insert(LoginHistory loginHistory);
+    AccessHistory insert(AccessHistory accessHistory);
 }

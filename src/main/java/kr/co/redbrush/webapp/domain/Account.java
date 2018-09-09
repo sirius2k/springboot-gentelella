@@ -32,6 +32,9 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private boolean activated;
+
     @Column
     private LocalDateTime lastLogin;
 
