@@ -4,7 +4,7 @@ import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.service.AccountService;
-import kr.co.redbrush.webapp.service.LoginHistoryService;
+import kr.co.redbrush.webapp.service.AccessHistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,7 +35,7 @@ public class DefaultAuthenticationSuccessHandlerTest {
     private AccountService accountService;
 
     @Mock
-    private LoginHistoryService loginHistoryService;
+    private AccessHistoryService accessHistoryService;
 
     @Mock
     private HttpServletRequest request;
@@ -57,7 +57,7 @@ public class DefaultAuthenticationSuccessHandlerTest {
         AccountRole accountRole = new AccountRole();
         accountRole.setRoleName("ADMIN");
 
-        accountRoles = new ArrayList<AccountRole>();
+        accountRoles = new ArrayList<>();
         accountRoles.add(accountRole);
 
         Account account = new Account();

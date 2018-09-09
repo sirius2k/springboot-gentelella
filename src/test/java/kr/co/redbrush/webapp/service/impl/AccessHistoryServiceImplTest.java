@@ -1,7 +1,7 @@
 package kr.co.redbrush.webapp.service.impl;
 
 import kr.co.redbrush.webapp.domain.AccessHistory;
-import kr.co.redbrush.webapp.repository.LoginHistoryRepository;
+import kr.co.redbrush.webapp.repository.AccessHistoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,15 +18,15 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-public class LoginHistoryServiceImplTest {
+public class AccessHistoryServiceImplTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @InjectMocks
-    public LoginHistoryServiceImpl loginHistoryService = new LoginHistoryServiceImpl();
+    public AccessHistoryServiceImpl loginHistoryService = new AccessHistoryServiceImpl();
 
     @Mock
-    private LoginHistoryRepository loginHistoryRepository;
+    private AccessHistoryRepository accessHistoryRepository;
 
     private AccessHistory accessHistory;
     private Long id = 1L;
@@ -41,7 +41,7 @@ public class LoginHistoryServiceImplTest {
 
     @Test
     public void testInsert() {
-        when(loginHistoryRepository.save(accessHistory)).thenReturn(accessHistory);
+        when(accessHistoryRepository.save(accessHistory)).thenReturn(accessHistory);
 
         AccessHistory expectedAccessHistory = loginHistoryService.insert(accessHistory);
 

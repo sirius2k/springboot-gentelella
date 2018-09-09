@@ -8,7 +8,7 @@ import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
 import kr.co.redbrush.webapp.exception.PasswordEmptyException;
 import kr.co.redbrush.webapp.repository.AccountRepository;
 import kr.co.redbrush.webapp.repository.AccountRoleRepository;
-import kr.co.redbrush.webapp.repository.LoginHistoryRepository;
+import kr.co.redbrush.webapp.repository.AccessHistoryRepository;
 import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -51,7 +51,7 @@ public class AccountServiceImplTest {
     private AccountRoleRepository accountRoleRepository;
 
     @Mock
-    private LoginHistoryRepository loginHistoryRepository;
+    private AccessHistoryRepository accessHistoryRepository;
 
     @Mock
     private MessageSourceService messageSourceService;
@@ -161,7 +161,9 @@ public class AccountServiceImplTest {
     public void testProcessLoginSuccess() throws Exception {
         accountService.processLoginSuccess(account);
 
-        verify(loginHistoryRepository).save(argThat(loginHistory -> loginHistory.getAccount() == account));
+        verify(accessHistoryRepository).save(argThat(accessHistory ->
+            accessHistory.getAccount() == account && accessHistory.isLoggedIn() == true
+        ));
         verify(accountRepository).save(argThat(account -> account.getLastLogin() != null));
     }
 }
