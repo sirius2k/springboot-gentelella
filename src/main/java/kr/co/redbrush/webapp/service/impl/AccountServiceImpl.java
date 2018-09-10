@@ -10,7 +10,7 @@ import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
 import kr.co.redbrush.webapp.exception.PasswordEmptyException;
 import kr.co.redbrush.webapp.repository.AccountRepository;
 import kr.co.redbrush.webapp.repository.AccountRoleRepository;
-import kr.co.redbrush.webapp.repository.LoginHistoryRepository;
+import kr.co.redbrush.webapp.repository.AccessHistoryRepository;
 import kr.co.redbrush.webapp.service.AccountService;
 import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
     private AccountRoleRepository accountRoleRepository;
 
     @Autowired
-    private LoginHistoryRepository loginHistoryRepository;
+    private AccessHistoryRepository accessHistoryRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,6 +59,11 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
         } else {
             throw new UsernameNotFoundException("username = " + username);
         }
+    }
+
+    @Override
+    public Account getAccount(String userId) {
+        return accountRepository.findAccountByUserId(userId);
     }
 
     @Override
@@ -105,7 +110,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
         accessHistory.setAccount(account);
         accessHistory.setLoggedIn(true);
         accessHistory.setLoginDate(LocalDateTime.now());
-        loginHistoryRepository.save(accessHistory);
+        accessHistoryRepository.save(accessHistory);
 
         account.setLastLogin(accessHistory.getLoginDate());
         accountRepository.save(account);
