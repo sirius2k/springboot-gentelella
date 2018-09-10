@@ -71,7 +71,7 @@ public class DefaultAuthenticationSuccessHandlerTest {
     }
 
     @Test
-    public void testAuthenticate() throws Exception {
+    public void onAuthenticationSuccess() throws Exception {
         defaultAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
         verify(accountService).processLoginSuccess(userDetails.getAccount());
