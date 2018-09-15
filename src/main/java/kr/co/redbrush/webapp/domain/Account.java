@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -28,6 +27,12 @@ public class Account {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private int passwordFailureCount;
+
+    @Column
+    private LocalDateTime passwordUpdatedDate;
 
     @Column(nullable = false, unique = true)
     private String email;

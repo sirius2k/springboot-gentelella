@@ -2,7 +2,6 @@ package kr.co.redbrush.webapp.security;
 
 import kr.co.redbrush.webapp.domain.AccessHistory;
 import kr.co.redbrush.webapp.domain.Account;
-import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.service.AccessHistoryService;
 import kr.co.redbrush.webapp.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,52 +10,77 @@ import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.LockedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Slf4j
-public class DefaultAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthenticationFailureHandler {
+    private static final String BAD_CREDENTIAL_EXCEPTION_URL = "/login/form?error=true";
+    private static final String CREDENTIALS_EXPIRED_EXCEPTION_URL = "/login/form?error=true";
+    private static final String ACCOUNT_EXPIRED_EXCEPTION_URL = "/login/form?error=true";
+    private static final String LOCKED_EXCEPTION_URL = "/login/form?error=true";
+
     @Autowired
     private AccountService accountService;
 
     @Autowired
     private AccessHistoryService accessHistoryService;
 
+    @PostConstruct
+    public void init() {
+        Map<String, String> failureUrlMap = new HashMap<>();
+        failureUrlMap.put(BadCredentialsException.class.getName(), BAD_CREDENTIAL_EXCEPTION_URL);
+        failureUrlMap.put(CredentialsExpiredException.class.getName(), CREDENTIALS_EXPIRED_EXCEPTION_URL);
+        failureUrlMap.put(AccountExpiredException.class.getName(), ACCOUNT_EXPIRED_EXCEPTION_URL);
+        failureUrlMap.put(LockedException.class.getName(), LOCKED_EXCEPTION_URL);
+
+        setExceptionMappings(failureUrlMap);
+    }
+
     @Override
+    @Transactional
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException, ServletException {
         String userId = request.getParameter("id");
         Account account = accountService.getAccount(userId);
 
         if (authenticationException instanceof BadCredentialsException) {
-            processBadCredential(account);
+            processBadCredential(account, authenticationException);
         } else if (authenticationException instanceof CredentialsExpiredException) {
-            // TODO : Implement CredentialsExpiredException
+            processException(account, authenticationException);
         } else if (authenticationException instanceof LockedException) {
-            // TODO : Implement LockedException
+            processException(account, authenticationException);
         } else if (authenticationException instanceof AccountExpiredException) {
-            // TODO : Implement AccountExpiredException
+            processException(account, authenticationException);
         }
 
         super.onAuthenticationFailure(request, response, authenticationException);
     }
 
-    private void processBadCredential(Account account) {
+    private void processException(Account account, AuthenticationException authenticationException) {
         AccessHistory accessHistory = new AccessHistory();
         accessHistory.setAccount(account);
         accessHistory.setLoggedIn(false);
         accessHistory.setLoginDate(LocalDateTime.now());
+        accessHistory.setComment(authenticationException.getMessage());
         accessHistoryService.insert(accessHistory);
+    }
+
+    private void processBadCredential(Account account, AuthenticationException authenticationException) {
+        processException(account, authenticationException);
+
+        account.setPasswordFailureCount(account.getPasswordFailureCount() + 1);
+        accountService.update(account);
     }
 }

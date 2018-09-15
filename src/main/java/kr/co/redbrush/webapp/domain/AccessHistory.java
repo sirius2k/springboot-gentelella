@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Entity
@@ -18,6 +17,9 @@ public class AccessHistory {
 
     @Column
     private boolean loggedIn;
+
+    @Column
+    private String comment;
 
     @ManyToOne
     @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_account_login_history"))
