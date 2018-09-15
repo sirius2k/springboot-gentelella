@@ -68,17 +68,19 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
 
     @Override
     public Account insertAdmin(Account account) {
-        addAdminRole(account);
-
         if (StringUtils.isNotEmpty(account.getPassword())) {
-            String encryptedPassword = passwordEncoder.encode(account.getPassword());
-
-            account.setPassword(encryptedPassword);
-
-            return accountRepository.save(account);
-        } else {
             throw new PasswordEmptyException(messageSourceService.getMessage(MessageKey.PASSWORD_EMPTY));
         }
+
+        addAdminRole(account);
+
+        String encryptedPassword = passwordEncoder.encode(account.getPassword());
+
+        account.setPassword(encryptedPassword);
+        account.setPasswordUpdatedDate(LocalDateTime.now());
+        account.setActivated(true);
+
+        return accountRepository.save(account);
     }
 
     @Override

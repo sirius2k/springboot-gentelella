@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -123,8 +124,18 @@ public class AccountServiceImplTest {
     @Test
     public void testInsertAdmin() {
         when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
-        when(accountRepository.save(argThat(account -> {
-            return passwordEncoder.matches(password, account.getPassword());
+        when(accountRepository.save(argThat(new ArgumentMatcher<Account>() {
+            @Override
+            public boolean matches(Account account) {
+                if (passwordEncoder.matches(password, account.getPassword()) &&
+                        account.getPasswordFailureCount() == 0 &&
+                        account.getPasswordUpdatedDate() != null &&
+                        account.isActivated()) {
+                    return true;
+                }
+
+                return false;
+            }
         }))).thenReturn(account);
 
         Account expectedAccount = accountService.insertAdmin(account);

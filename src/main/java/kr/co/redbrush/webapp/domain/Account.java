@@ -31,6 +31,9 @@ public class Account {
     @Column(nullable = false)
     private int passwordFailureCount;
 
+    @Column
+    private LocalDateTime passwordUpdatedDate;
+
     @Column(nullable = false, unique = true)
     private String email;
 
