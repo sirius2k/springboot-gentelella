@@ -68,7 +68,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
 
     @Override
     public Account insertAdmin(Account account) {
-        if (StringUtils.isNotEmpty(account.getPassword())) {
+        if (StringUtils.isEmpty(account.getPassword())) {
             throw new PasswordEmptyException(messageSourceService.getMessage(MessageKey.PASSWORD_EMPTY));
         }
 
