@@ -38,6 +38,9 @@ public class Account {
     private String email;
 
     @Column(nullable = false)
+    private boolean locked;
+
+    @Column(nullable = false)
     private boolean activated;
 
     @Column
