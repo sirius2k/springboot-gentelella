@@ -6,6 +6,7 @@ import kr.co.redbrush.webapp.service.AccessHistoryService;
 import kr.co.redbrush.webapp.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -37,6 +38,9 @@ public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthent
 
     @Autowired
     private AccessHistoryService accessHistoryService;
+
+    @Value("${account.password.failure.max.count:5}")
+    private int passwordFailureMaxCount;
 
     @PostConstruct
     public void init() {
@@ -80,7 +84,13 @@ public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthent
     private void processBadCredential(Account account, AuthenticationException authenticationException) {
         processException(account, authenticationException);
 
+        // TODO : Implement test
+        if (account.getPasswordFailureCount() >= passwordFailureMaxCount && !account.isLocked()) {
+            account.setLocked(true);
+        }
+
         account.setPasswordFailureCount(account.getPasswordFailureCount() + 1);
         accountService.update(account);
+
     }
 }
