@@ -16,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,11 +45,14 @@ public class DefaultAuthenticationFailureHandlerTest {
     @Mock
     private HttpServletResponse response;
 
+    private int passwordFailureMaxCount = 5;
     private String userId = "userId";
     private Account account = new Account();
 
     @Before
     public void before() {
+        ReflectionTestUtils.setField(defaultAuthenticationFailureHandler, "passwordFailureMaxCount", passwordFailureMaxCount);
+
         when(request.getParameter("id")).thenReturn(userId);
         when(accountService.getAccount(userId)).thenReturn(account);
     }
@@ -61,7 +65,20 @@ public class DefaultAuthenticationFailureHandlerTest {
 
         testOnAuthenticationFailure(comment, authenticationException);
 
-        verify(accountService).update(argThat(account -> account.getPasswordFailureCount() == (passwordFailureCount + 1)));
+        verify(accountService).update(argThat(account -> (account.getPasswordFailureCount() == (passwordFailureCount + 1) && !account.isLocked())));
+    }
+
+    @Test
+    public void testOnAuthenticationFailureWithBadCredentialAndMaxPassfailureCountExceeded() throws Exception {
+        int passwordFailureCount = account.getPasswordFailureCount();
+        String comment = "Bad Credential";
+        AuthenticationException authenticationException = new BadCredentialsException(comment);
+
+        account.setPasswordFailureCount(passwordFailureMaxCount);
+
+        testOnAuthenticationFailure(comment, authenticationException);
+
+        verify(accountService).update(argThat(account -> (account.getPasswordFailureCount() == (passwordFailureCount + 1) && account.isLocked())));
     }
 
     @Test

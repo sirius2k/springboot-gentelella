@@ -91,6 +91,5 @@ public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthent
 
         account.setPasswordFailureCount(account.getPasswordFailureCount() + 1);
         accountService.update(account);
-
     }
 }
