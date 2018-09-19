@@ -46,6 +46,9 @@ public class Account {
     @Column
     private LocalDateTime lastLogin;
 
+    @Column
+    private LocalDateTime activatedDate;
+
     @CreatedDate
     @Column
     private LocalDateTime createdDate;

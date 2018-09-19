@@ -28,10 +28,10 @@ import java.util.Map;
 @Component
 @Slf4j
 public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthenticationFailureHandler {
-    private static final String BAD_CREDENTIAL_EXCEPTION_URL = "/login/form?error=true";
-    private static final String CREDENTIALS_EXPIRED_EXCEPTION_URL = "/login/form?error=true";
-    private static final String ACCOUNT_EXPIRED_EXCEPTION_URL = "/login/form?error=true";
-    private static final String LOCKED_EXCEPTION_URL = "/login/form?error=true";
+    private static final String BAD_CREDENTIAL_EXCEPTION_URL = "/login/form?error=true&type=1";
+    private static final String CREDENTIALS_EXPIRED_EXCEPTION_URL = "/login/form?error=true&type=2";
+    private static final String ACCOUNT_EXPIRED_EXCEPTION_URL = "/login/form?error=true&type=3";
+    private static final String LOCKED_EXCEPTION_URL = "/login/form?error=true&type=4";
 
     @Autowired
     private AccountService accountService;
@@ -84,7 +84,6 @@ public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthent
     private void processBadCredential(Account account, AuthenticationException authenticationException) {
         processException(account, authenticationException);
 
-        // TODO : Implement test
         if (account.getPasswordFailureCount() >= passwordFailureMaxCount && !account.isLocked()) {
             account.setLocked(true);
         }
