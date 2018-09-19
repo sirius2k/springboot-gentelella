@@ -1,5 +1,8 @@
 package kr.co.redbrush.webapp.domain;
 
+import kr.co.redbrush.webapp.enums.CalendarType;
+import kr.co.redbrush.webapp.enums.MaritalStatus;
+import kr.co.redbrush.webapp.enums.Sex;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,8 +23,16 @@ public class Profile {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    @Column(nullable = false, unique = true)
+    private Sex sex;
     private LocalDate birthday;
+    private CalendarType birthdayType;
+    private MaritalStatus maritalStatus;
+    private String mobileNumber;
+    private String homeNumber;
+    private String job;
+    private String postCode;
+    private String address1;
+    private String address2;
 
     @CreatedDate
     @Column

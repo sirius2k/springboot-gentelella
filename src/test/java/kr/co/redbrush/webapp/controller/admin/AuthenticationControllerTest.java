@@ -66,7 +66,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
         when(accountService.getCount()).thenReturn(1L);
 
-        ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
+        ModelAndView modelAndView = authenticationController.loginForm(request, model, error, null);
 
         assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_LOGIN));
         assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
@@ -83,7 +83,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         when(authenticationException.getMessage()).thenReturn(errorMessage);
         when(accountService.getCount()).thenReturn(1L);
 
-        ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
+        ModelAndView modelAndView = authenticationController.loginForm(request, model, error, null);
 
         assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_LOGIN));
         assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
@@ -98,7 +98,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         when(session.getAttribute(AuthenticationController.SPRING_SECURITY_LAST_EXCEPTION)).thenReturn(null);
         when(accountService.getCount()).thenReturn(0L);
 
-        ModelAndView modelAndView = authenticationController.loginForm(request, model, error);
+        ModelAndView modelAndView = authenticationController.loginForm(request, model, error, null);
 
         assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
         assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_SIGNUP_REDIRECT));

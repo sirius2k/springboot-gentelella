@@ -4,6 +4,7 @@ import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.dto.FailedResult;
 import kr.co.redbrush.webapp.dto.RequestResult;
 import kr.co.redbrush.webapp.dto.SuccessfulResult;
+import kr.co.redbrush.webapp.enums.AuthenticationExceptionType;
 import kr.co.redbrush.webapp.enums.MessageKey;
 import kr.co.redbrush.webapp.form.SignupForm;
 import kr.co.redbrush.webapp.service.AccountService;
@@ -11,6 +12,7 @@ import kr.co.redbrush.webapp.service.MessageSourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.modelmapper.ModelMapper;
+import org.parboiled.common.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
@@ -46,8 +48,10 @@ public class AuthenticationController {
     private MessageSourceService messageSourceService;
 
     @GetMapping("/login/form")
-    public ModelAndView loginForm(HttpServletRequest request, Map<String, Object> model, String error) {
-        setErrorCondition(request, model, error);
+    public ModelAndView loginForm(HttpServletRequest request, Map<String, Object> model, String error, Integer type) {
+        if (StringUtils.isNotEmpty(error)) {
+            setErrorCondition(request, model, error, type);
+        }
 
         if (accountService.getCount() == 0) {
             return new ModelAndView(new RedirectView(VIEW_SIGNUP_REDIRECT));
@@ -56,9 +60,26 @@ public class AuthenticationController {
         }
     }
 
-    private void setErrorCondition(HttpServletRequest request, Map<String, Object> model, String error) {
+    private void setErrorCondition(HttpServletRequest request, Map<String, Object> model, String error, Integer type) {
+        // TODO : Need to update test
         Optional.ofNullable((AuthenticationException)request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION))
                 .ifPresent(authenticatonException -> model.put("errorMessage", authenticatonException.getMessage()));
+
+        // TODO : Implement to get Error Message
+        if (model.get("errorMessage") == null) {
+            switch (AuthenticationExceptionType.valueOf(type)) {
+                case BAD_CREDENTIAL:
+                    break;
+                case CREDENTIALS_EXPIRED:
+                    break;
+                case ACCOUNT_EXPIRED:
+                    break;
+                case LOCKED:
+                    break;
+            }
+        }
+
+        LOGGER.debug("error : {}, type : {}, SPRING_SECURITY_LAST_EXCEPTION : {}", error, type, request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION));
 
         model.put("error", BooleanUtils.toBoolean(error));
     }
