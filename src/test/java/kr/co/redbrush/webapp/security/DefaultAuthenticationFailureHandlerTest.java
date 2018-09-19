@@ -70,7 +70,6 @@ public class DefaultAuthenticationFailureHandlerTest {
 
     @Test
     public void testOnAuthenticationFailureWithBadCredentialAndMaxPassfailureCountExceeded() throws Exception {
-        int passwordFailureCount = account.getPasswordFailureCount();
         String comment = "Bad Credential";
         AuthenticationException authenticationException = new BadCredentialsException(comment);
 
@@ -78,7 +77,11 @@ public class DefaultAuthenticationFailureHandlerTest {
 
         testOnAuthenticationFailure(comment, authenticationException);
 
-        verify(accountService).update(argThat(account -> (account.getPasswordFailureCount() == (passwordFailureCount + 1) && account.isLocked())));
+        verify(accountService).update(argThat(account -> checkAccountLocked(account, passwordFailureMaxCount)));
+    }
+
+    private boolean checkAccountLocked(Account account, int passwordFailureCount) {
+        return (account.getPasswordFailureCount() == (passwordFailureCount + 1)) && account.isLocked();
     }
 
     @Test
