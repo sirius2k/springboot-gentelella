@@ -1,5 +1,6 @@
 package kr.co.redbrush.webapp.security;
 
+import kr.co.redbrush.webapp.domain.AccessHistory;
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.service.AccessHistoryService;
 import kr.co.redbrush.webapp.service.AccountService;
@@ -21,7 +22,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,22 +57,38 @@ public class DefaultAuthenticationFailureHandlerTest {
         ReflectionTestUtils.setField(defaultAuthenticationFailureHandler, "passwordFailureMaxCount", passwordFailureMaxCount);
 
         when(request.getParameter("id")).thenReturn(userId);
-        when(accountService.getAccount(userId)).thenReturn(account);
     }
 
     @Test
     public void testOnAuthenticationFailureWithBadCredential() throws Exception {
+        when(accountService.getAccount(userId)).thenReturn(account);
+
         int passwordFailureCount = account.getPasswordFailureCount();
         String comment = "Bad Credential";
         AuthenticationException authenticationException = new BadCredentialsException(comment);
 
         testOnAuthenticationFailure(comment, authenticationException);
 
-        verify(accountService).update(argThat(account -> (account.getPasswordFailureCount() == (passwordFailureCount + 1) && !account.isLocked())));
+        verify(accountService).update(argThat(account -> account.getPasswordFailureCount() == (passwordFailureCount + 1) && !account.isLocked()));
     }
 
     @Test
+    public void testOnAuthenticationFailureWithNonExistedAccount() throws Exception {
+        // TODO : Fix test case
+        String comment = "Bad Credential";
+        AuthenticationException authenticationException = new BadCredentialsException(comment);
+
+        defaultAuthenticationFailureHandler.onAuthenticationFailure(request, response, authenticationException);
+
+        verify(accessHistoryService, times(0)).insert(any(AccessHistory.class));
+        verify(accountService, times(0)).update(account);
+    }
+
+
+    @Test
     public void testOnAuthenticationFailureWithBadCredentialAndMaxPassfailureCountExceeded() throws Exception {
+        when(accountService.getAccount(userId)).thenReturn(account);
+
         String comment = "Bad Credential";
         AuthenticationException authenticationException = new BadCredentialsException(comment);
 
@@ -86,6 +105,8 @@ public class DefaultAuthenticationFailureHandlerTest {
 
     @Test
     public void testOnAuthenticationFailureWithCredentialExpired() throws Exception {
+        when(accountService.getAccount(userId)).thenReturn(account);
+
         String comment = "Credential expired";
         AuthenticationException authenticationException = new CredentialsExpiredException(comment);
 
@@ -94,6 +115,8 @@ public class DefaultAuthenticationFailureHandlerTest {
 
     @Test
     public void testOnAuthenticationFailureWithLocked() throws Exception {
+        when(accountService.getAccount(userId)).thenReturn(account);
+
         String comment = "Locked";
         AuthenticationException authenticationException = new LockedException(comment);
 
@@ -102,6 +125,8 @@ public class DefaultAuthenticationFailureHandlerTest {
 
     @Test
     public void testOnAuthenticationFailureWithAccountExpired() throws Exception {
+        when(accountService.getAccount(userId)).thenReturn(account);
+
         String comment = "AccountExpired";
         AuthenticationException authenticationException = new AccountExpiredException(comment);
 

@@ -70,6 +70,8 @@ public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthent
         }
 
         super.onAuthenticationFailure(request, response, authenticationException);
+
+        saveException(request, authenticationException);
     }
 
     private void processException(Account account, AuthenticationException authenticationException) {
@@ -82,13 +84,15 @@ public class DefaultAuthenticationFailureHandler extends ExceptionMappingAuthent
     }
 
     private void processBadCredential(Account account, AuthenticationException authenticationException) {
-        processException(account, authenticationException);
+        if (account != null) {
+            processException(account, authenticationException);
 
-        if (account.getPasswordFailureCount() >= passwordFailureMaxCount && !account.isLocked()) {
-            account.setLocked(true);
+            if (account.getPasswordFailureCount() >= passwordFailureMaxCount && !account.isLocked()) {
+                account.setLocked(true);
+            }
+
+            account.setPasswordFailureCount(account.getPasswordFailureCount() + 1);
+            accountService.update(account);
         }
-
-        account.setPasswordFailureCount(account.getPasswordFailureCount() + 1);
-        accountService.update(account);
     }
 }

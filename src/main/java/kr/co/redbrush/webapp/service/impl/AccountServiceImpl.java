@@ -114,6 +114,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
         accessHistory.setLoginDate(LocalDateTime.now());
         accessHistoryRepository.save(accessHistory);
 
+        account.setPasswordFailureCount(0);
         account.setLastLogin(accessHistory.getLoginDate());
         accountRepository.save(account);
     }
