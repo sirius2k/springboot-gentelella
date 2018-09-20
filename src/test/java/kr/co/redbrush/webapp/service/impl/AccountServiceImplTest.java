@@ -1,5 +1,6 @@
 package kr.co.redbrush.webapp.service.impl;
 
+import kr.co.redbrush.webapp.domain.AccessHistory;
 import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.domain.AccountRole;
 import kr.co.redbrush.webapp.domain.SecureAccount;
@@ -179,11 +180,18 @@ public class AccountServiceImplTest {
 
     @Test
     public void testProcessLoginSuccess() throws Exception {
+        account.setPasswordFailureCount(1);
         accountService.processLoginSuccess(account);
 
-        verify(accessHistoryRepository).save(argThat(accessHistory ->
-            accessHistory.getAccount() == account && accessHistory.isLoggedIn() == true
-        ));
-        verify(accountRepository).save(argThat(account -> account.getLastLogin() != null));
+        verify(accessHistoryRepository).save(argThat(accessHistory -> validateAccountHistoryWhenLoginSucceded(accessHistory)));
+        verify(accountRepository).save(argThat(account -> validateAccountWhenLoginSucceded(account)));
+    }
+
+    private boolean validateAccountHistoryWhenLoginSucceded(AccessHistory accessHistory) {
+        return accessHistory.getAccount() == account && accessHistory.isLoggedIn();
+    }
+
+    private boolean validateAccountWhenLoginSucceded(Account account) {
+        return account.getLastLogin() != null && account.getPasswordFailureCount() == 0;
     }
 }

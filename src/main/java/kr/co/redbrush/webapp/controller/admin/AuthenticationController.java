@@ -4,7 +4,6 @@ import kr.co.redbrush.webapp.domain.Account;
 import kr.co.redbrush.webapp.dto.FailedResult;
 import kr.co.redbrush.webapp.dto.RequestResult;
 import kr.co.redbrush.webapp.dto.SuccessfulResult;
-import kr.co.redbrush.webapp.enums.AuthenticationExceptionType;
 import kr.co.redbrush.webapp.enums.MessageKey;
 import kr.co.redbrush.webapp.form.SignupForm;
 import kr.co.redbrush.webapp.service.AccountService;
@@ -61,23 +60,8 @@ public class AuthenticationController {
     }
 
     private void setErrorCondition(HttpServletRequest request, Map<String, Object> model, String error, Integer type) {
-        // TODO : Need to update test
         Optional.ofNullable((AuthenticationException)request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION))
                 .ifPresent(authenticatonException -> model.put("errorMessage", authenticatonException.getMessage()));
-
-        // TODO : Implement to get Error Message
-        if (model.get("errorMessage") == null) {
-            switch (AuthenticationExceptionType.valueOf(type)) {
-                case BAD_CREDENTIAL:
-                    break;
-                case CREDENTIALS_EXPIRED:
-                    break;
-                case ACCOUNT_EXPIRED:
-                    break;
-                case LOCKED:
-                    break;
-            }
-        }
 
         LOGGER.debug("error : {}, type : {}, SPRING_SECURITY_LAST_EXCEPTION : {}", error, type, request.getSession().getAttribute(SPRING_SECURITY_LAST_EXCEPTION));
 
