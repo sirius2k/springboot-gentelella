@@ -51,7 +51,7 @@ public class SecureAccount implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return account.isLocked();
+        return !account.isLocked();
     }
 
     @Override
