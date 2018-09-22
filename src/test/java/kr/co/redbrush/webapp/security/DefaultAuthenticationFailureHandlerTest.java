@@ -21,6 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -48,6 +49,9 @@ public class DefaultAuthenticationFailureHandlerTest {
     @Mock
     private HttpServletResponse response;
 
+    @Mock
+    private HttpSession session;
+
     private int passwordFailureMaxCount = 5;
     private String userId = "userId";
     private Account account = new Account();
@@ -57,6 +61,7 @@ public class DefaultAuthenticationFailureHandlerTest {
         ReflectionTestUtils.setField(defaultAuthenticationFailureHandler, "passwordFailureMaxCount", passwordFailureMaxCount);
 
         when(request.getParameter("id")).thenReturn(userId);
+        when(request.getSession()).thenReturn(session);
     }
 
     @Test
@@ -74,7 +79,6 @@ public class DefaultAuthenticationFailureHandlerTest {
 
     @Test
     public void testOnAuthenticationFailureWithNonExistedAccount() throws Exception {
-        // TODO : Fix test case
         String comment = "Bad Credential";
         AuthenticationException authenticationException = new BadCredentialsException(comment);
 
