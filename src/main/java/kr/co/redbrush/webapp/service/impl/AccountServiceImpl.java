@@ -2,10 +2,9 @@ package kr.co.redbrush.webapp.service.impl;
 
 import kr.co.redbrush.webapp.domain.AccessHistory;
 import kr.co.redbrush.webapp.domain.Account;
-import kr.co.redbrush.webapp.domain.AccountRole;
+import kr.co.redbrush.webapp.domain.Role;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import kr.co.redbrush.webapp.enums.MessageKey;
-import kr.co.redbrush.webapp.enums.Role;
 import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
 import kr.co.redbrush.webapp.exception.PasswordEmptyException;
 import kr.co.redbrush.webapp.repository.AccessHistoryRepository;
@@ -79,6 +78,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
         account.setPassword(encryptedPassword);
         account.setPasswordUpdatedDate(LocalDateTime.now());
         account.setActivated(true);
+        account.setActivatedDate(LocalDateTime.now());
 
         return accountRepository.save(account);
     }
@@ -89,8 +89,8 @@ public class AccountServiceImpl implements UserDetailsService, AccountService {
     }
 
     private void addAdminRole(Account account) {
-        List<AccountRole> roles = new ArrayList<>();
-        AccountRole adminRole = accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName());
+        List<Role> roles = new ArrayList<>();
+        Role adminRole = accountRoleRepository.findByRoleName(kr.co.redbrush.webapp.enums.Role.ROLE_ADMIN.getName());
 
         LOGGER.debug("Admin role : {}", adminRole);
 

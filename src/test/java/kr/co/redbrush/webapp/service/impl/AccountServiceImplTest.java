@@ -2,9 +2,8 @@ package kr.co.redbrush.webapp.service.impl;
 
 import kr.co.redbrush.webapp.domain.AccessHistory;
 import kr.co.redbrush.webapp.domain.Account;
-import kr.co.redbrush.webapp.domain.AccountRole;
+import kr.co.redbrush.webapp.domain.Role;
 import kr.co.redbrush.webapp.domain.SecureAccount;
-import kr.co.redbrush.webapp.enums.Role;
 import kr.co.redbrush.webapp.exception.AdminRoleNotFoundException;
 import kr.co.redbrush.webapp.exception.PasswordEmptyException;
 import kr.co.redbrush.webapp.repository.AccessHistoryRepository;
@@ -68,8 +67,8 @@ public class AccountServiceImplTest {
     private String password = "password";
     private String email = "test@test.com";
 
-    private AccountRole accountRole;
-    private String roleName = Role.ROLE_ADMIN.getName();
+    private Role role;
+    private String roleName = kr.co.redbrush.webapp.enums.Role.ROLE_ADMIN.getName();
 
     @Before
     public void before() {
@@ -80,12 +79,12 @@ public class AccountServiceImplTest {
         account.setPassword(password);
         account.setEmail(email);
 
-        accountRole = new AccountRole();
-        accountRole.setArid(id);
-        accountRole.setRoleName(roleName);
+        role = new Role();
+        role.setId(id);
+        role.setRoleName(roleName);
 
-        List<AccountRole> roles = new ArrayList<>();
-        roles.add(accountRole);
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
 
         account.setRoles(roles);
     }
@@ -124,13 +123,14 @@ public class AccountServiceImplTest {
 
     @Test
     public void testInsertAdmin() {
-        when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
+        when(accountRoleRepository.findByRoleName(kr.co.redbrush.webapp.enums.Role.ROLE_ADMIN.getName())).thenReturn(role);
         when(accountRepository.save(argThat(new ArgumentMatcher<Account>() {
             @Override
             public boolean matches(Account account) {
                 if (passwordEncoder.matches(password, account.getPassword()) &&
                         account.getPasswordFailureCount() == 0 &&
                         account.getPasswordUpdatedDate() != null &&
+                        account.getActivatedDate() != null &&
                         account.isActivated()) {
                     return true;
                 }
@@ -148,14 +148,14 @@ public class AccountServiceImplTest {
     public void testInsertAdminWithEmptyPassword() {
         account.setPassword(null);
 
-        when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(accountRole);
+        when(accountRoleRepository.findByRoleName(kr.co.redbrush.webapp.enums.Role.ROLE_ADMIN.getName())).thenReturn(role);
 
         accountService.insertAdmin(account);
     }
 
     @Test(expected = AdminRoleNotFoundException.class)
     public void testInsertAdminShouldReturnAdminRoleNotFoundException() {
-        when(accountRoleRepository.findByRoleName(Role.ROLE_ADMIN.getName())).thenReturn(null);
+        when(accountRoleRepository.findByRoleName(kr.co.redbrush.webapp.enums.Role.ROLE_ADMIN.getName())).thenReturn(null);
 
         accountService.insertAdmin(account);
     }

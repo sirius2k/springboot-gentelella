@@ -1,7 +1,7 @@
 package kr.co.redbrush.webapp.security;
 
 import kr.co.redbrush.webapp.domain.Account;
-import kr.co.redbrush.webapp.domain.AccountRole;
+import kr.co.redbrush.webapp.domain.Role;
 import kr.co.redbrush.webapp.domain.SecureAccount;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -44,20 +44,20 @@ public class DefaultAuthenticationProviderTest {
     private String password = "password";
     private String invalidUsername = "invalid";
     private SecureAccount userDetails;
-    private List<AccountRole> accountRoles;
+    private List<Role> roles;
 
     @Before
     public void before() {
-        AccountRole accountRole = new AccountRole();
-        accountRole.setRoleName("ADMIN");
+        Role role = new Role();
+        role.setRoleName("ADMIN");
 
-        accountRoles = new ArrayList<AccountRole>();
-        accountRoles.add(accountRole);
+        roles = new ArrayList<Role>();
+        roles.add(role);
 
         Account account = new Account();
         account.setUserId(username);
         account.setPassword(password);
-        account.setRoles(accountRoles);
+        account.setRoles(roles);
 
         userDetails = new SecureAccount(account);
 
