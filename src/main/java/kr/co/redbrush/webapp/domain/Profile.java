@@ -42,7 +42,10 @@ public class Profile {
     @Column
     private LocalDateTime updatedDate;
 
-    @OneToOne
-    @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_profile_account"))
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id",  nullable = false, foreignKey = @ForeignKey(name = "FK_profile_account"))
     private Account account;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL, mappedBy = "profile")
+    private ProfileImage profileImage;
 }

@@ -36,7 +36,7 @@ public class ProfileImage {
     @Column
     private LocalDateTime updatedDate;
 
-    @OneToOne
-    @JoinColumn(name = "profile_id", nullable = true, foreignKey = @ForeignKey(name = "FK_profile_image_profile"))
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "profile_id", nullable = false, foreignKey = @ForeignKey(name = "FK_profile_image_profile"))
     private Profile profile;
 }
