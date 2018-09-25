@@ -4,6 +4,7 @@ import kr.co.redbrush.webapp.enums.CalendarType;
 import kr.co.redbrush.webapp.enums.MaritalStatus;
 import kr.co.redbrush.webapp.enums.Sex;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,24 +16,17 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @EntityListeners(value = {AuditingEntityListener.class})
-public class Profile {
+public class ProfileImage {
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String nickname;
-
-    private Sex sex;
-    private LocalDate birthday;
-    private CalendarType birthdayType;
-    private MaritalStatus maritalStatus;
-    private String mobileNumber;
-    private String homeNumber;
-    private String job;
-    private String postCode;
-    private String address1;
-    private String address2;
+    private String fileName;
+    private String fileType;
+    private long size;
+    private long width;
+    private long height;
 
     @CreatedDate
     @Column
@@ -43,9 +37,6 @@ public class Profile {
     private LocalDateTime updatedDate;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id",  nullable = false, foreignKey = @ForeignKey(name = "FK_profile_account"))
-    private Account account;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade =  CascadeType.ALL, mappedBy = "profile")
-    private ProfileImage profileImage;
+    @JoinColumn(name = "profile_id", nullable = false, foreignKey = @ForeignKey(name = "FK_profile_image_profile"))
+    private Profile profile;
 }

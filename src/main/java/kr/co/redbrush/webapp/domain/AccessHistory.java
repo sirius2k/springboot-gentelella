@@ -22,6 +22,6 @@ public class AccessHistory {
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_account_login_history"))
+    @JoinColumn(name = "account_id", foreignKey = @ForeignKey(name = "FK_account_access_history"))
     private Account account;
 }

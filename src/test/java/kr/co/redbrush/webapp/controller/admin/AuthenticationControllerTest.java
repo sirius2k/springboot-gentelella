@@ -26,6 +26,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,7 +70,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
         ModelAndView modelAndView = authenticationController.loginForm(request, model, error, null);
 
         assertThat("Unexpected value.", modelAndView.getViewName(), is(AuthenticationController.VIEW_LOGIN));
-        assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
+        assertThat("Unexpected value.", model.get("error"), nullValue());
         assertThat("Unexpected value.", model.get("errorMessage"), nullValue());
     }
 
@@ -102,7 +103,7 @@ public class AuthenticationControllerTest extends ControllerTestBase {
 
         assertThat("Unexpected value.", modelAndView.getView(), instanceOf(RedirectView.class));
         assertThat("Unexpected value.", ((AbstractUrlBasedView)modelAndView.getView()).getUrl(), is(AuthenticationController.VIEW_SIGNUP_REDIRECT));
-        assertThat("Unexpected value.", model.get("error"), is(expectedErrorParam));
+        assertThat("Unexpected value.", model.get("error"), nullValue());
         assertThat("Unexpected value.", model.get("errorMessage"), nullValue());
     }
 

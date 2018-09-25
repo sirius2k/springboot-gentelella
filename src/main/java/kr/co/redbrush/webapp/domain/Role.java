@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(of = "roleName")
 @Entity
-public class AccountRole {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long arid;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String roleName;
