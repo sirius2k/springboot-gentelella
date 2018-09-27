@@ -9,7 +9,7 @@ $ cd /go/to/project
 $ mvn spring-boot:run
 ```
 
-You can see webpate page on your browser http://localhost:8080. Also, you can access to h2 database with http://localhost:8080/h2
+You can see web admin page on your browser http://localhost:8080. Also, you can access to h2 database with http://localhost:8080/h2
 
 # IDE Support
 If you use IntelliJ or WebStorm you can find the Handlebars/Mustache plugin which will help you to check handlebars template syntax.
