@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-        // TODO : Use below code to disable csrf.
+        // CONFIG : Use below code to disable csrf.
         /*httpSecurity.csrf()
                 .disable()
                 .authorizeRequests()*/
