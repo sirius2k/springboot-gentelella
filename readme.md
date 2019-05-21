@@ -1,5 +1,5 @@
 ## Synopsis
-This project is gentelella admin template project which uses spring boot and handlebars template. You can use this project as a boiler plate project for SpringBoot 2.x admin template.
+This project is gentelella admin boilerplate project which uses spring boot and handlebars template. You can use this project as a boiler plate project for SpringBoot 2.x admin template.
 
 ## Gentelella Theme Demo
 You can view the Demo of Gentelella Theme here: https://colorlib.com/polygon/gentelella/index.html
